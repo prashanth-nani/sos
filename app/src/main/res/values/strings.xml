@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SOS</string>
+    <string name="email_username">Email/Username</string>
 </resources>
