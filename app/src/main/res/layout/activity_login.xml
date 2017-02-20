@@ -11,9 +11,8 @@
     android:orientation="vertical"
     tools:context="in.ac.mnnit.sos.LoginActivity">
 
-
     <TextView
-        android:text="LOGIN"
+        android:text="WELCOME BACK"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +38,7 @@
         android:hint="Password" />
 
     <Button
-        android:text="CONTINUE"
+        android:text="LOGIN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
