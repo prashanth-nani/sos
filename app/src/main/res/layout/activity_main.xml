@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
     android:padding="25dp"
     tools:context="in.ac.mnnit.sos.MainActivity">
 
@@ -13,36 +12,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="#FFF"
+        android:textColor="#464242"
         android:textSize="25sp"
         android:textAllCaps="true"
         android:letterSpacing="0.1"
         android:text="Login" />
 
     <EditText
+        android:id="@+id/email"
         android:paddingTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email_username"
         android:textColor="@color/colorAccent"
         android:inputType="textEmailAddress"
-        android:textColorHint="#d1c6c6"/>
+        android:paddingLeft="2dp"
+        android:textColorHint="#c7a3a3"/>
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:textColor="@color/colorAccent"
         android:hint="Password"
-        android:textColorHint="#d1c6c6"/>
+        android:paddingLeft="2dp"
+        android:textColorHint="#c7a3a3"/>
 
-    <EditText
-        android:id="@+id/searchBox"
-        android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/text_input_background"
-        android:hint="@string/email_username"
-        android:paddingLeft="10dp"
-        android:inputType="textVisiblePassword" />
+    <Button
+        android:id="@+id/registerBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onRegisterClick"
+        android:text="Register"/>
+
+    <TextView
+        android:id="@+id/response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
