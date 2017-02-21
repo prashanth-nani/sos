@@ -1,6 +1,7 @@
 package in.ac.mnnit.sos;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,34 +31,38 @@ public class UserEmailActivity extends AppCompatActivity {
 
         email = (EditText) findViewById(R.id.emailEditText);
         continueBtn = (Button) findViewById(R.id.continueButton);
-        continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String isRegistered) {
-                                Intent intent;
-                                Toast.makeText(UserEmailActivity.this, isRegistered, Toast.LENGTH_SHORT).show();
-                                if(isRegistered.equalsIgnoreCase("true")){
-                                    intent = new Intent(UserEmailActivity.this, LoginActivity.class);
-                                }
-                                else {
-                                    intent = new Intent(UserEmailActivity.this, RegisterActivity.class);
-                                }
-                                intent.putExtra("email", email.getText().toString());
-                                startActivity(intent);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error){
-                                Toast.makeText(UserEmailActivity.this, "Unable to reach the server at the moment. Please try after sometime.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
-                queue.add(processEmail);
-            }
-        });
+//        continueBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//
+//        });
+    }
+
+    public void onClickContinue(View v) {
+        ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String isRegistered) {
+                        Intent intent;
+//                                Toast.makeText(UserEmailActivity.this, isRegistered, Toast.LENGTH_SHORT).show();
+                        if(isRegistered.equalsIgnoreCase("true")){
+                            intent = new Intent(UserEmailActivity.this, LoginActivity.class);
+                        }
+                        else {
+                            intent = new Intent(UserEmailActivity.this, RegisterActivity.class);
+                        }
+                        intent.putExtra("email", email.getText().toString());
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Toast.makeText(UserEmailActivity.this, "Unable to reach the server at the moment. Please try after sometime.", Toast.LENGTH_SHORT).show();
+//                                Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
+//                                        .setAction("Action", null).show();
+                    }
+                });
+        RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
+        queue.add(processEmail);
     }
 }
