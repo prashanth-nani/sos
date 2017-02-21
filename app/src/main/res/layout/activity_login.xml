@@ -44,6 +44,7 @@
         android:layout_marginTop="15dp"
         android:textColor="#FFF"
         android:background="@color/colorPrimary"
+        android:onClick="onClickLogin"
         android:id="@+id/loginButton" />
 
 </LinearLayout>

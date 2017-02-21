@@ -1,10 +1,12 @@
 package in.ac.mnnit.sos;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -18,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import in.ac.mnnit.sos.models.User;
+import in.ac.mnnit.sos.server.Config;
 import in.ac.mnnit.sos.server.RegisterUser;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -30,7 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password;
     private Button registerButton;
     private User user;
-    private final String registerUrl = "http://172.31.74.249/sos/register.php";
+    Config config = new Config();
+    private String BaseUrl = config.getBaseURL();
+    private final String registerUrl = BaseUrl.concat("register.php");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +50,15 @@ public class RegisterActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.radioSex);
         etEmail = (EditText) findViewById(R.id.emailEditText);
         password = (EditText) findViewById(R.id.passwordEditText);
-//        registerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//
-//        });
         etEmail.setText(email);
+        etEmail.setFocusable(false);
     }
 
     public void onClickRegister(final View v) {
         int selectedId = radioGroup.getCheckedRadioButtonId();
         radioButton = (RadioButton) findViewById(selectedId);
-        Snackbar.make(v, "Processing", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+//        Snackbar.make(v, "Processing", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
 
         user = new User(name.getText().toString(), phone.getText().toString(), radioButton.getText().toString(), etEmail.getText().toString(), password.getText().toString());
         RegisterUser registerUser = new RegisterUser(user, Request.Method.POST, registerUrl,
@@ -64,8 +66,16 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if(response.equalsIgnoreCase("SUCCESS")){
-                            Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+//                            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                            Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
+//                                    .setAction("Action", null).show();
+//                            try {
+//                                Thread.sleep(3000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+
                             Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                             intent.putExtra("name", user.getName());
                             intent.putExtra("email", user.getEmail());
