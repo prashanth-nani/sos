@@ -35,7 +35,7 @@
         android:layout_below="@+id/horizontalLine"
         android:layout_marginTop="30dp"
         android:background="@drawable/text_input_background"
-        android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+        android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
         android:drawablePadding="5dp"
         android:ems="10"
         android:fontFamily="monospace"
