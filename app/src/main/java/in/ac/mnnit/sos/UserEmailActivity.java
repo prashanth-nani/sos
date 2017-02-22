@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,6 +26,9 @@ public class UserEmailActivity extends AppCompatActivity {
 
     EditText email;
     Button continueBtn;
+    ProgressBar progressBar;
+    LinearLayout linearLayout;
+
     private final String processEmailUrl = "http://172.31.74.249/sos/process_email.php";
 
     @Override
@@ -43,6 +48,8 @@ public class UserEmailActivity extends AppCompatActivity {
 
             email = (EditText) findViewById(R.id.emailEditText);
             continueBtn = (Button) findViewById(R.id.continueButton);
+            progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            linearLayout = (LinearLayout) findViewById(R.id.activity_user_email);
         }
     }
 
@@ -50,7 +57,10 @@ public class UserEmailActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
+        progressBar.setVisibility(View.VISIBLE);
+        linearLayout.setAlpha(0.6f);
+
+        final ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String isRegistered) {
@@ -67,11 +77,20 @@ public class UserEmailActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progressBar.setVisibility(View.GONE);
+                        linearLayout.setAlpha(1f);
                         Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 });
         RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
         queue.add(processEmail);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        progressBar.setVisibility(View.GONE);
+        linearLayout.setAlpha(1f);
     }
 }
