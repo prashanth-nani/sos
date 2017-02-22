@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Config config = new Config();
     private String BaseUrl = config.getBaseURL();
     private String loginUrl = BaseUrl.concat("login.php");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,48 +47,51 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(final View v) {
-        progressBarHolder.setVisibility(View.VISIBLE);
+        String passwordText = password.getText().toString().trim();
+        if (passwordText.equalsIgnoreCase("")) {
+            password.setError("Password is empty");
+        }
+        else {
+            progressBarHolder.setVisibility(View.VISIBLE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            Credential cred = new Credential(email.getText().toString(), passwordText);
+            LoginUser loginUser = new LoginUser(cred, Request.Method.POST, loginUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            progressBarHolder.setVisibility(View.GONE);
 
-        Credential cred = new Credential(email.getText().toString(), password.getText().toString());
-        LoginUser loginUser = new LoginUser(cred, Request.Method.POST, loginUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBarHolder.setVisibility(View.GONE);
+                            if (response.equalsIgnoreCase("true")) {
+                                SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("loggedin", true);
+                                editor.commit();
 
-                        if(response.equalsIgnoreCase("true"))
-                        {
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("loggedin", true);
-                            editor.commit();
-
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            intent.putExtra("name", email.getText().toString());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            startActivity(intent);
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                intent.putExtra("name", email.getText().toString());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                startActivity(intent);
+                            } else {
+                                Snackbar.make(v, "Wrong Credentials", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                            }
                         }
-                        else{
-                            Snackbar.make(v, "Wrong Credentials", Snackbar.LENGTH_LONG)
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressBarHolder.setVisibility(View.GONE);
+
+                            Snackbar.make(v, "Couldn't reach the server at the moment", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBarHolder.setVisibility(View.GONE);
-
-                        Snackbar.make(v, "Couldn't reach the server at the moment", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-        queue.add(loginUser);
+                    });
+            RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+            queue.add(loginUser);
+        }
     }
 }

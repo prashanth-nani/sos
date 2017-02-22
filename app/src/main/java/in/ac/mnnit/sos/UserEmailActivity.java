@@ -36,14 +36,13 @@ public class UserEmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("loggedin", false)){
+        if (sharedPreferences.getBoolean("loggedin", false)) {
             Intent intent = new Intent(UserEmailActivity.this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             finish();
-        }
-        else {
+        } else {
             setContentView(R.layout.activity_user_email);
 
             email = (EditText) findViewById(R.id.emailEditText);
@@ -53,42 +52,42 @@ public class UserEmailActivity extends AppCompatActivity {
     }
 
     public void onClickContinue(final View v) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        String emailText = email.getText().toString().trim();
+        if (emailText.equalsIgnoreCase("")) {
+            email.setError("Enter your email ID");
+        } else {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        progressBarHolder.setVisibility(View.VISIBLE);
+            progressBarHolder.setVisibility(View.VISIBLE);
 
-        final ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String isRegistered) {
-                        progressBarHolder.setVisibility(View.GONE);
+            final ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String isRegistered) {
+                            progressBarHolder.setVisibility(View.GONE);
 
-                        Intent intent;
-                        if (isRegistered.equalsIgnoreCase("true")) {
-                            intent = new Intent(UserEmailActivity.this, LoginActivity.class);
-                        } else {
-                            intent = new Intent(UserEmailActivity.this, RegisterActivity.class);
+                            Intent intent;
+                            if (isRegistered.equalsIgnoreCase("true")) {
+                                intent = new Intent(UserEmailActivity.this, LoginActivity.class);
+                            } else {
+                                intent = new Intent(UserEmailActivity.this, RegisterActivity.class);
+                            }
+                            intent.putExtra("email", email.getText().toString());
+                            startActivity(intent);
                         }
-                        intent.putExtra("email", email.getText().toString());
-                        startActivity(intent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBarHolder.setVisibility(View.GONE);
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressBarHolder.setVisibility(View.GONE);
 
-                        Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-        RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
-        queue.add(processEmail);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+                            Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    });
+            RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
+            queue.add(processEmail);
+        }
     }
 }

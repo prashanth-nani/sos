@@ -59,52 +59,61 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onClickRegister(final View v) {
-        progressBarHolder.setVisibility(View.VISIBLE);
+        String nameText = name.getText().toString().trim();
+        String passwordText = password.getText().toString().trim();
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        if (nameText.equalsIgnoreCase("")) {
+            name.setError("Name cannot be empty");
+        } else if (passwordText.equalsIgnoreCase("")) {
+            password.setError("Password cannot be empty");
+        } else {
 
-        int selectedId = radioGroup.getCheckedRadioButtonId();
-        radioButton = (RadioButton) findViewById(selectedId);
+            progressBarHolder.setVisibility(View.VISIBLE);
 
-        user = new User(name.getText().toString(), phone.getText().toString(), radioButton.getText().toString(), etEmail.getText().toString(), password.getText().toString());
-        RegisterUser registerUser = new RegisterUser(user, Request.Method.POST, registerUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBarHolder.setVisibility(View.GONE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                        if(response.equalsIgnoreCase("SUCCESS")){
-                            Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            radioButton = (RadioButton) findViewById(selectedId);
+
+            user = new User(name.getText().toString(), phone.getText().toString(), radioButton.getText().toString(), etEmail.getText().toString(), password.getText().toString());
+            RegisterUser registerUser = new RegisterUser(user, Request.Method.POST, registerUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            progressBarHolder.setVisibility(View.GONE);
+
+                            if (response.equalsIgnoreCase("SUCCESS")) {
+                                Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+
+                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                intent.putExtra("name", user.getName());
+                                intent.putExtra("email", user.getEmail());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                startActivity(intent);
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("loggedin", true);
+                                editor.commit();
+                            } else {
+                                Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressBarHolder.setVisibility(View.GONE);
+                            Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
-
-                            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                            intent.putExtra("name", user.getName());
-                            intent.putExtra("email", user.getEmail());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            startActivity(intent);
-
-                            SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("loggedin", true);
-                            editor.commit();
                         }
-                        else{
-                            Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBarHolder.setVisibility(View.GONE);
-                        Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-        RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-        queue.add(registerUser);
+                    });
+            RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
+            queue.add(registerUser);
+        }
     }
 }
