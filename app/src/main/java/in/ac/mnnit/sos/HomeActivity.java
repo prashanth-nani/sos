@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (exit) {
             finish(); // finish activity
         } else {
-            Snackbar.make(findViewById(android.R.id.content), "Press Back again to Exit.", Snackbar.LENGTH_SHORT)
+            Snackbar.make(findViewById(android.R.id.content), "Tap back again to exit", Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {

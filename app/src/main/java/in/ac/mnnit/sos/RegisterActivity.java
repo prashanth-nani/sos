@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -32,7 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioButton radioButton;
     private EditText etEmail;
     private EditText password;
-    private Button registerButton;
+    private FrameLayout progressBarHolder;
+
     private User user;
     Config config = new Config();
     private String BaseUrl = config.getBaseURL();
@@ -51,11 +52,15 @@ public class RegisterActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.radioSex);
         etEmail = (EditText) findViewById(R.id.emailEditText);
         password = (EditText) findViewById(R.id.passwordEditText);
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+
         etEmail.setText(email);
         etEmail.setFocusable(false);
     }
 
     public void onClickRegister(final View v) {
+        progressBarHolder.setVisibility(View.VISIBLE);
+
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -67,6 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressBarHolder.setVisibility(View.GONE);
+
                         if(response.equalsIgnoreCase("SUCCESS")){
                             Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
@@ -92,7 +99,8 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Snackbar.make(v, "Registration Failed!", Snackbar.LENGTH_LONG)
+                        progressBarHolder.setVisibility(View.GONE);
+                        Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 });

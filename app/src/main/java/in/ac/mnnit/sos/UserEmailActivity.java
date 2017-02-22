@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import in.ac.mnnit.sos.server.Config;
 import in.ac.mnnit.sos.server.ProcessEmail;
 
 import static com.android.volley.Request.Method.POST;
@@ -26,10 +26,10 @@ public class UserEmailActivity extends AppCompatActivity {
 
     EditText email;
     Button continueBtn;
-    ProgressBar progressBar;
-    LinearLayout linearLayout;
+    FrameLayout progressBarHolder;
 
-    private final String processEmailUrl = "http://172.31.74.249/sos/process_email.php";
+    Config config = new Config();
+    private final String processEmailUrl = config.getBaseURL().concat("process_email.php");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,7 @@ public class UserEmailActivity extends AppCompatActivity {
 
             email = (EditText) findViewById(R.id.emailEditText);
             continueBtn = (Button) findViewById(R.id.continueButton);
-            progressBar = (ProgressBar) findViewById(R.id.progressBar);
-            linearLayout = (LinearLayout) findViewById(R.id.activity_user_email);
+            progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
         }
     }
 
@@ -57,13 +56,14 @@ public class UserEmailActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        progressBar.setVisibility(View.VISIBLE);
-        linearLayout.setAlpha(0.6f);
+        progressBarHolder.setVisibility(View.VISIBLE);
 
         final ProcessEmail processEmail = new ProcessEmail(email.getText().toString(), POST, processEmailUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String isRegistered) {
+                        progressBarHolder.setVisibility(View.GONE);
+
                         Intent intent;
                         if (isRegistered.equalsIgnoreCase("true")) {
                             intent = new Intent(UserEmailActivity.this, LoginActivity.class);
@@ -77,8 +77,8 @@ public class UserEmailActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progressBar.setVisibility(View.GONE);
-                        linearLayout.setAlpha(1f);
+                        progressBarHolder.setVisibility(View.GONE);
+
                         Snackbar.make(v, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
@@ -90,7 +90,5 @@ public class UserEmailActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.GONE);
-        linearLayout.setAlpha(1f);
     }
 }
