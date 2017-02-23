@@ -21,8 +21,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import in.ac.mnnit.sos.models.User;
-import in.ac.mnnit.sos.server.Config;
-import in.ac.mnnit.sos.server.RegisterUser;
+import in.ac.mnnit.sos.services.Config;
+import in.ac.mnnit.sos.services.RegisterUser;
 
 public class RegisterActivity extends AppCompatActivity {
 

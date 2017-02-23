@@ -18,8 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import in.ac.mnnit.sos.models.Credential;
-import in.ac.mnnit.sos.server.Config;
-import in.ac.mnnit.sos.server.LoginUser;
+import in.ac.mnnit.sos.services.Config;
+import in.ac.mnnit.sos.services.LoginUser;
 
 public class LoginActivity extends AppCompatActivity {
 

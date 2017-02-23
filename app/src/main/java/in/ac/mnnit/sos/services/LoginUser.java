@@ -1,4 +1,4 @@
-package in.ac.mnnit.sos.server;
+package in.ac.mnnit.sos.services;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;

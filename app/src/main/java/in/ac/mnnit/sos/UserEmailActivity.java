@@ -17,8 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-import in.ac.mnnit.sos.server.Config;
-import in.ac.mnnit.sos.server.ProcessEmail;
+import in.ac.mnnit.sos.services.Config;
+import in.ac.mnnit.sos.services.ProcessEmail;
 
 import static com.android.volley.Request.Method.POST;
 

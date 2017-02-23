@@ -1,4 +1,4 @@
-package in.ac.mnnit.sos.server;
+package in.ac.mnnit.sos.services;
 
 /**
  * Created by prashanth on 21/2/17.
