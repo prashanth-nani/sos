@@ -1,12 +1,16 @@
 package in.ac.mnnit.sos;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,15 +21,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import in.ac.mnnit.sos.fragments.EmergencyContactsFragment;
-import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.fragments.HomeFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        EmergencyContactsFragment.OnListFragmentInteractionListener {
+        HomeFragment.OnFragmentInteractionListener{
 
     View bottomNavigationMenuItem;
     BottomNavigationView bottomNavigationView;
+    FragmentManager fragmentManager;
+    FragmentTransaction transaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,12 @@ public class HomeActivity extends AppCompatActivity
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
+
+        HomeFragment homeFragment = new HomeFragment();
+        fragmentManager = getSupportFragmentManager();
+        transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.content_home, homeFragment, "homeFragment");
+        transaction.commit();
     }
 
     private Boolean exit = false;
@@ -129,7 +141,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void showEmergencyContacts(){
-
+        Log.d("test", "emergency");
     }
 
     public void showHome(){
@@ -138,11 +150,11 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Contact contactItem) {
+    public void onFragmentInteraction(Uri uri) {
 
     }
 
-    class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener{
+    class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
