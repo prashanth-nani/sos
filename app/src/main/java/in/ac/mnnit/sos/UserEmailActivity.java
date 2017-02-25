@@ -37,7 +37,7 @@ public class UserEmailActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
         if (sharedPreferences.getBoolean("loggedin", false)) {
-            Intent intent = new Intent(UserEmailActivity.this, HomeActivity.class);
+            Intent intent = new Intent(UserEmailActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);

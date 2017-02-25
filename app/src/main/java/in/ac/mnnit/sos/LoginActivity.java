@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putBoolean("loggedin", true);
                                 editor.commit();
 
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("name", email.getText().toString());
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
