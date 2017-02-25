@@ -1,7 +1,10 @@
 package in.ac.mnnit.sos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,12 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import in.ac.mnnit.sos.fragments.EmergencyContactsFragment;
+import in.ac.mnnit.sos.models.Contact;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        EmergencyContactsFragment.OnListFragmentInteractionListener {
 
     View bottomNavigationMenuItem;
+    BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +53,9 @@ public class HomeActivity extends AppCompatActivity
 
         bottomNavigationMenuItem = findViewById(R.id.action_home);
         bottomNavigationMenuItem.performClick();
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
     }
 
     private Boolean exit = false;
@@ -116,5 +126,35 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showEmergencyContacts(){
+
+    }
+
+    public void showHome(){
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Contact contactItem) {
+
+    }
+
+    class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener{
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.action_emergency:
+                    showEmergencyContacts();
+                    break;
+                case R.id.action_home:
+                    showHome();
+                    break;
+            }
+            return false;
+        }
     }
 }
