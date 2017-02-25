@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Snackbar.make(v, "Successfully registered!", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
 
-                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                 intent.putExtra("name", user.getName());
                                 intent.putExtra("email", user.getEmail());
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
