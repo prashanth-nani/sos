@@ -22,7 +22,7 @@ import in.ac.mnnit.sos.services.ProcessEmail;
 
 import static com.android.volley.Request.Method.POST;
 
-public class UserEmailActivity extends AppCompatActivity {
+public class ProcessEmailActivity extends AppCompatActivity {
 
     EditText email;
     Button continueBtn;
@@ -37,13 +37,13 @@ public class UserEmailActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
         if (sharedPreferences.getBoolean("loggedin", false)) {
-            Intent intent = new Intent(UserEmailActivity.this, MainActivity.class);
+            Intent intent = new Intent(ProcessEmailActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             finish();
         } else {
-            setContentView(R.layout.activity_user_email);
+            setContentView(R.layout.activity_process_email);
 
             email = (EditText) findViewById(R.id.emailEditText);
             continueBtn = (Button) findViewById(R.id.continueButton);
@@ -69,9 +69,9 @@ public class UserEmailActivity extends AppCompatActivity {
 
                             Intent intent;
                             if (isRegistered.equalsIgnoreCase("true")) {
-                                intent = new Intent(UserEmailActivity.this, LoginActivity.class);
+                                intent = new Intent(ProcessEmailActivity.this, LoginActivity.class);
                             } else {
-                                intent = new Intent(UserEmailActivity.this, RegisterActivity.class);
+                                intent = new Intent(ProcessEmailActivity.this, RegisterActivity.class);
                             }
                             intent.putExtra("email", email.getText().toString());
                             startActivity(intent);
@@ -86,7 +86,7 @@ public class UserEmailActivity extends AppCompatActivity {
                                     .setAction("Action", null).show();
                         }
                     });
-            RequestQueue queue = Volley.newRequestQueue(UserEmailActivity.this);
+            RequestQueue queue = Volley.newRequestQueue(ProcessEmailActivity.this);
             queue.add(processEmail);
         }
     }
