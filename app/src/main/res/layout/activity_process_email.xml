@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F0F4F5"
     android:padding="@dimen/activity_vertical_margin"
-    tools:context="in.ac.mnnit.sos.UserEmailActivity">
+    tools:context="in.ac.mnnit.sos.ProcessEmailActivity">
 
     <TextView
         android:id="@+id/getStartedTitle"

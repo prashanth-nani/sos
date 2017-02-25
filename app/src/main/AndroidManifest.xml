@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserEmailActivity">
+        <activity android:name=".VerifyEmailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
