@@ -21,11 +21,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
+import in.ac.mnnit.sos.fragments.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        HomeFragment.OnFragmentInteractionListener{
+        HomeFragment.OnFragmentInteractionListener, ContactFragment.OnListFragmentInteractionListener{
 
     View bottomNavigationMenuItem;
     BottomNavigationView bottomNavigationView;
@@ -63,10 +65,11 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
 
-        HomeFragment homeFragment = new HomeFragment();
         fragmentManager = getFragmentManager();
+
+        HomeFragment homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.content_home, homeFragment, "homeFragment");
+        transaction.add(R.id.content_main, homeFragment, "homeFragment");
         transaction.commit();
     }
 
@@ -141,16 +144,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showEmergencyContacts(){
-        Log.d("test", "emergency");
+        ContactFragment contactFragment = new ContactFragment();
+        transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_main, contactFragment, "contactFragment");
+        transaction.commit();
     }
 
     public void showHome(){
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        HomeFragment homeFragment = new HomeFragment();
+        transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_main, homeFragment, "homeFragment");
+        transaction.commit();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
     }
 
