@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
 
         HomeFragment homeFragment = new HomeFragment();
-        fragmentManager = getSupportFragmentManager();
+        fragmentManager = getFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.content_home, homeFragment, "homeFragment");
         transaction.commit();
@@ -165,8 +165,12 @@ public class MainActivity extends AppCompatActivity
                 case R.id.action_home:
                     showHome();
                     break;
+                case R.id.action_locate:
+                    break;
+                default:
+                    return false;
             }
-            return false;
+            return true;
         }
     }
 }
