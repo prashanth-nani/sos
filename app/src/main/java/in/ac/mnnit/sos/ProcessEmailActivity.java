@@ -43,7 +43,7 @@ public class ProcessEmailActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            setContentView(R.layout.activity_verify_email);
+            setContentView(R.layout.activity_process_email);
 
             email = (EditText) findViewById(R.id.emailEditText);
             continueBtn = (Button) findViewById(R.id.continueButton);
