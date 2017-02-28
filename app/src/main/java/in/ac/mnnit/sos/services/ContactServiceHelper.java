@@ -42,11 +42,12 @@ public class ContactServiceHelper {
                 null, null, null);
 
         /*
-        * Retrieving Contact ID and PhotoURI
+        * Retrieving Contact ID, Name and PhotoURI
         */
         assert cursorID != null;
         if (cursorID.moveToFirst()) {
             contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
+//            name = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             photoUri = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
         }
         cursorID.close();
@@ -70,6 +71,7 @@ public class ContactServiceHelper {
             while (pCursor.moveToNext()) {
                 int phoneType = pCursor.getInt(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                 String phoneNo = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                name = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 switch (phoneType) {
                     case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                         Log.e(name + ": TYPE_MOBILE", " " + phoneNo);

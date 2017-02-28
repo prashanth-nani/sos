@@ -49,12 +49,18 @@ public class Utils {
     }
 
     public Bitmap getPhotoBitmap(ContentResolver contentResolver, String photoUri) throws IOException {
-        Bitmap photo = MediaStore.Images.Media.getBitmap(contentResolver, Uri.parse(photoUri));
+        Bitmap photo = null;
+        if(photoUri != null) {
+            photo = MediaStore.Images.Media.getBitmap(contentResolver, Uri.parse(photoUri));
+        }
         return photo;
     }
 
     public Bitmap getPhotoBitmap(ContentResolver contentResolver, Uri photoUri) throws IOException {
-        Bitmap photo = MediaStore.Images.Media.getBitmap(contentResolver, photoUri);
+        Bitmap photo = null;
+        if(photoUri != null) {
+            photo = MediaStore.Images.Media.getBitmap(contentResolver, photoUri);
+        }
         return photo;
     }
 }
