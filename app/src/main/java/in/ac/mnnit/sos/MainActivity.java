@@ -1,28 +1,31 @@
 package in.ac.mnnit.sos;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.dummy.DummyContent;
+import in.ac.mnnit.sos.services.ContactServiceHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -32,6 +35,10 @@ public class MainActivity extends AppCompatActivity
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
     FragmentTransaction transaction;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_PICK_CONTACTS = 1;
+    private Uri uriContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +51,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                onClickSelectContact();
             }
         });
 
@@ -72,6 +78,23 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    private void onClickSelectContact() {
+        Intent contactsIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(contactsIntent, REQUEST_CODE_PICK_CONTACTS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK){
+            Log.d(TAG, "Response: " + data.toString());
+            uriContact = data.getData();
+
+            ContactServiceHelper contactServiceHelper = new ContactServiceHelper(getApplicationContext(), uriContact);
+        }
+    }
+
     private Boolean exit = false;
     @Override
     public void onBackPressed() {
@@ -90,9 +113,7 @@ public class MainActivity extends AppCompatActivity
                     exit = false;
                 }
             }, 2 * 1000);
-
         }
-
     }
 
     @Override

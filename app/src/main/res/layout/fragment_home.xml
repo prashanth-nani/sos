@@ -7,10 +7,16 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_centerInParent="true"
         android:text="Welcome User!" />
+
+    <ImageView
+        android:id="@+id/image_contact"
+        android:layout_below="@id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
