@@ -44,25 +44,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //CREATE USER TABLE
-    private static final String CREATE_TABLE_USER = "CREATE TABLE "+USER_TABLE+
-            " ("+USER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+USER_NAME+" VARCHAR(255) )";
+    private static final String CREATE_TABLE_USER = "CREATE TABLE "
+            +USER_TABLE+ " ("
+            +USER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +USER_NAME+" VARCHAR(255) );";
+
 
 
     //CREATE PHONE TABLE
-    private static final String CREATE_TABLE_PHONE = "CREATE TABLE "+PHONE_TABLE+
-            " ("+PHONE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+PHONE+" VARCHAR(255), "+PHONE_TYPE_ID+" INTEGER)";
+    private static final String CREATE_TABLE_PHONE = "CREATE TABLE "
+            +PHONE_TABLE+ " ("
+            +PHONE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +PHONE+" VARCHAR(255), "
+            +PHONE_TYPE_ID+" INTEGER, "
+            +"FOREIGN KEY ("+PHONE_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
+
 
     //CREATE EMAIL TABLE
-    private static final String CREATE_TABLE_EMAIL = "CREATE TABLE "+EMAIL_TABLE+
-            " ("+EMAIL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+EMAIL+" VARCHAR(255), "+EMAIL_TYPE_ID+" INTEGER )";
+    private static final String CREATE_TABLE_EMAIL = "CREATE TABLE "
+            +EMAIL_TABLE+ " ("
+            +EMAIL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +EMAIL+" VARCHAR(255), "
+            +EMAIL_TYPE_ID+" INTEGER, "
+            +"FOREIGN KEY ("+EMAIL_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
+
 
     //CREATE ADDRESS TABLE
-    private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE "+ADDRESS_TABLE+
-            " ("+ADDRESS_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ADDRESS+" VARCHAR(255), "+ADDRESS_TYPE_ID+" INTEGER )";
+    private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE "
+            +ADDRESS_TABLE+ " ("
+            +ADDRESS_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +ADDRESS+" VARCHAR(255), "
+            +ADDRESS_TYPE_ID+" INTEGER, "
+            +"FOREIGN KEY ("+ADDRESS_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
+
 
     //CREATE DATATYPE TABLE
-    private static final String CREATE_TABLE_DATATYPE = "CREATE TABLE "+TYPE_TABLE+
-            " ("+DATATYPE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+DATA_TYPE+" VARCHAR(255) )";
+    private static final String CREATE_TABLE_DATATYPE = "CREATE TABLE "
+            +TYPE_TABLE+ " ("
+            +DATATYPE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +DATA_TYPE+" VARCHAR(255))";
 
 
 
