@@ -25,16 +25,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //PHONE TABLE COLUMNS
     private static final String PHONE_ID = "_pid";
+    private  static final String PHONE_CONTACT_ID = "_cid";
     private static final String PHONE = "number";
     private  static final String PHONE_TYPE_ID = "phone_type";
 
     //EMAIL TABLE COLUMNS
     private static final String EMAIL_ID = "_eid";
+    private  static final String EMAIL_CONTACT_ID = "_cid";
     private static final String EMAIL = "email";
     private  static final String EMAIL_TYPE_ID = "email_type";
 
     //ADDRESS TABLE COLUMNS
     private static final String ADDRESS_ID = "_aid";
+    private  static final String ADDRESS_CONTACT_ID = "_cid";
     private static final String ADDRESS = "address";
     private  static final String ADDRESS_TYPE_ID = "address_type";
 
@@ -50,14 +53,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +ECONTACT_NAME+" VARCHAR(255) );";
 
 
-
     //CREATE PHONE TABLE
     private static final String CREATE_TABLE_PHONE = "CREATE TABLE "
             +PHONE_TABLE+ " ("
             +PHONE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
             +PHONE+" VARCHAR(255), "
             +PHONE_TYPE_ID+" INTEGER, "
-            +"FOREIGN KEY ("+PHONE_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
+            +"FOREIGN KEY ("+PHONE_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"), "
+            +"FOREIGN KEY ("+PHONE_CONTACT_ID+") REFERENCES "+EMERGENCY_CONTACT_TABLE+"("+ECONTACT_ID+"));";
 
 
     //CREATE EMAIL TABLE
@@ -66,8 +69,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +EMAIL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
             +EMAIL+" VARCHAR(255), "
             +EMAIL_TYPE_ID+" INTEGER, "
-            +"FOREIGN KEY ("+EMAIL_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
-
+            +"FOREIGN KEY ("+EMAIL_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"), "
+            +"FOREIGN KEY ("+EMAIL_CONTACT_ID+") REFERENCES "+EMERGENCY_CONTACT_TABLE+"("+ECONTACT_ID+"));";
 
     //CREATE ADDRESS TABLE
     private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE "
@@ -75,7 +78,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +ADDRESS_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
             +ADDRESS+" VARCHAR(255), "
             +ADDRESS_TYPE_ID+" INTEGER, "
-            +"FOREIGN KEY ("+ADDRESS_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"));";
+            +"FOREIGN KEY ("+ADDRESS_TYPE_ID+") REFERENCES "+TYPE_TABLE+"("+DATATYPE_ID+"), "
+            +"FOREIGN KEY ("+ADDRESS_CONTACT_ID+") REFERENCES "+EMERGENCY_CONTACT_TABLE+"("+ECONTACT_ID+"));";
 
 
     //CREATE DATATYPE TABLE
@@ -85,6 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +DATA_TYPE+" VARCHAR(255))";
 
 
+    private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -92,12 +98,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(CREATE_TABLE_ECONTACT);
+        db.execSQL(CREATE_TABLE_DATATYPE);
+        db.execSQL(CREATE_TABLE_PHONE);
+        db.execSQL(CREATE_TABLE_EMAIL);
+        db.execSQL(CREATE_TABLE_ADDRESS);
 //        db.execSQL("PRAGMA foreign_keys=ON");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(DROP_TABLE_IF_EXISTS + EMAIL_TABLE);
+        db.execSQL(DROP_TABLE_IF_EXISTS + ADDRESS_TABLE);
+        db.execSQL(DROP_TABLE_IF_EXISTS + PHONE_TABLE);
+        db.execSQL(DROP_TABLE_IF_EXISTS + TYPE_TABLE);
+        db.execSQL(DROP_TABLE_IF_EXISTS + EMERGENCY_CONTACT_TABLE);
 
+        onCreate(db);
     }
 }
