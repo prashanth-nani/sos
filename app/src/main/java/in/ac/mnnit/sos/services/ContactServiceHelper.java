@@ -3,16 +3,20 @@ package in.ac.mnnit.sos.services;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import in.ac.mnnit.sos.extras.Utils;
+import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.models.Email;
+import in.ac.mnnit.sos.models.Phone;
 
 /**
  * Created by prashanth on 28/2/17.
@@ -22,9 +26,9 @@ public class ContactServiceHelper {
 
     private Uri contactUri;
     private String name = null;
-    private Map<String, String> phone = new HashMap<>();
-    private Map<String, String> email = new HashMap<>();
-    private Map<String, String> address = new HashMap<>();
+    private List<Phone> phone = new ArrayList<>();
+    private List<Email> email = new ArrayList<>();
+    private List<Address> address = new ArrayList<>();
     private ContentResolver contentResolver;
     private String contactID;
     private String photoUri;
@@ -47,7 +51,6 @@ public class ContactServiceHelper {
         assert cursorID != null;
         if (cursorID.moveToFirst()) {
             contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
-//            name = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             photoUri = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
         }
         cursorID.close();
@@ -75,27 +78,27 @@ public class ContactServiceHelper {
                 switch (phoneType) {
                     case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                         Log.e(name + ": TYPE_MOBILE", " " + phoneNo);
-                        phone.put("Mobile", phoneNo);
+                        phone.add(new Phone(phoneNo, "Mobile"));
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
                         Log.e(name + ": TYPE_HOME", " " + phoneNo);
-                        phone.put("Home", phoneNo);
+                        phone.add(new Phone(phoneNo, "Home"));
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
                         Log.e(name + ": TYPE_WORK", " " + phoneNo);
-                        phone.put("Work", phoneNo);
+                        phone.add(new Phone(phoneNo, "Work"));
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE:
                         Log.e(name + ": TYPE_WORK_MOBILE", " " + phoneNo);
-                        phone.put("Work Mobile", phoneNo);
+                        phone.add(new Phone(phoneNo, "Work Mobile"));
                         break;
                     case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
                         Log.e(name + ": TYPE_OTHER", " " + phoneNo);
-                        phone.put("Other", phoneNo);
+                        phone.add(new Phone(phoneNo, "Other"));
                         break;
                     case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
                         Log.e(name + ": TYPE_CUSTOM", " " + phoneNo);
-                        phone.put("Custom", phoneNo);
+                        phone.add(new Phone(phoneNo, "Custom"));
                         break;
                     default:
                         break;
@@ -118,19 +121,19 @@ public class ContactServiceHelper {
                 switch (emailType) {
                     case ContactsContract.CommonDataKinds.Email.TYPE_HOME:
                         Log.e(name + ": TYPE_HOME", " " + emailID);
-                        email.put("Home", emailID);
+                        email.add(new Email(emailID, "Home"));
                         break;
                     case ContactsContract.CommonDataKinds.Email.TYPE_WORK:
                         Log.e(name + ": TYPE_WORK", " " + emailID);
-                        email.put("Work", emailID);
+                        email.add(new Email(emailID, "Work"));
                         break;
                     case ContactsContract.CommonDataKinds.Email.TYPE_OTHER:
                         Log.e(name + ": TYPE_OTHER", " " + emailID);
-                        email.put("Other", emailID);
+                        email.add(new Email(emailID, "Other"));
                         break;
                     case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
                         Log.e(name + ": TYPE_CUSTOM", " " + emailID);
-                        email.put("Custom", emailID);
+                        email.add(new Email(emailID, "Custom"));
                         break;
                     default:
                         break;
@@ -153,19 +156,19 @@ public class ContactServiceHelper {
                 switch (addressType) {
                     case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_HOME:
                         Log.e(name + ": TYPE_HOME", " " + personAddress);
-                        address.put("Home", personAddress);
+                        address.add(new Address(personAddress, "Home"));
                         break;
                     case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK:
-                        Log.e(name + ": TYPE_HOME", " " + personAddress);
-                        address.put("Work", personAddress);
+                        Log.e(name + ": TYPE_WORK", " " + personAddress);
+                        address.add(new Address(personAddress, "Work"));
                         break;
                     case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_OTHER:
-                        Log.e(name + ": TYPE_HOME", " " + personAddress);
-                        address.put("Other", personAddress);
+                        Log.e(name + ": TYPE_OTHER", " " + personAddress);
+                        address.add(new Address(personAddress, "Other"));
                         break;
                     case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM:
-                        Log.e(name + ": TYPE_HOME", " " + personAddress);
-                        address.put("Custom", personAddress);
+                        Log.e(name + ": TYPE_CUSTOM", " " + personAddress);
+                        address.add(new Address(personAddress, "CUSTOM"));
                         break;
                     default:
                         break;
@@ -181,7 +184,11 @@ public class ContactServiceHelper {
     public Contact getContact() throws IOException {
         Utils utils = new Utils();
         Contact contact = new Contact(name, phone, email, address);
-        contact.setHighResPhoto(utils.getPhotoBitmap(contentResolver, photoUri));
+        Bitmap photo = utils.getPhotoBitmap(contentResolver, photoUri);
+
+        if(photo != null)
+            contact.setHighResPhoto(utils.getBytesFromBitmap(photo));
+
         return contact;
     }
 }

@@ -10,9 +10,9 @@ public class EcontactPhone {
     private int id;
     private int contactID;
     private String phoneNumber;
-    private int type;
+    private String type;
 
-    public EcontactPhone(String phoneNumber, int type) {
+    public EcontactPhone(String phoneNumber, String type) {
         this.phoneNumber = phoneNumber;
         this.type = type;
     }
@@ -41,11 +41,11 @@ public class EcontactPhone {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 }

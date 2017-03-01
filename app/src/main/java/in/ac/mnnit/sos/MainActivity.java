@@ -1,6 +1,7 @@
 package in.ac.mnnit.sos;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,14 +22,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import in.ac.mnnit.sos.database.DatabaseAdapter;
+import in.ac.mnnit.sos.database.entity.EcontactPhone;
+import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
 import in.ac.mnnit.sos.fragments.dummy.DummyContent;
 import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -101,8 +109,20 @@ public class MainActivity extends AppCompatActivity
             ContactServiceHelper contactServiceHelper = new ContactServiceHelper(getApplicationContext(), uriContact);
             try {
                 Contact contact = contactServiceHelper.getContact();
-                Snackbar.make(findViewById(android.R.id.content), contact.getName(), Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+
+                EmergencyContact eContact = new EmergencyContact(contact.getName());
+                List<EcontactPhone> econtactPhones = new ArrayList<>();
+                for(Phone phone: contact.getPhones()){
+                    econtactPhones.add(new EcontactPhone(phone.getNumber(), phone.getType()));
+                }
+
+                DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
+                databaseAdapter.insertEmergencyContact(eContact, econtactPhones);
+
+                String result = databaseAdapter.getAllEmergencyContacts();
+                Log.e("TAG", result);
+
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import in.ac.mnnit.sos.models.GeoPoint;
@@ -62,5 +64,11 @@ public class Utils {
             photo = MediaStore.Images.Media.getBitmap(contentResolver, photoUri);
         }
         return photo;
+    }
+
+    public byte[] getBytesFromBitmap(Bitmap photo){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.PNG, 1, stream);
+        return stream.toByteArray();
     }
 }

@@ -2,8 +2,8 @@ package in.ac.mnnit.sos.models;
 
 import android.graphics.Bitmap;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by prashanth on 25/2/17.
@@ -11,71 +11,65 @@ import java.util.Map;
 
 public class Contact {
     private String name = null;
-    private Map<String, String> labelledPhone = new HashMap<>();
-    private Map<String, String> labelledEmail = new HashMap<>();
-    private Map<String, String> labelledAddress = new HashMap<>();
-    private String[] phone;
-    private String[] email;
-    private String[] address;
-    private Bitmap thumbnailPhoto = null;
-    private Bitmap highResPhoto = null;
+    private List<Phone> phones = new ArrayList<>();
+    private List<Email> emails = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
+    private byte[] thumbnailPhoto = null;
+    private byte[] highResPhoto = null;
 
 
-    public Contact(String name, String[] phone, String[] email, String[] address) {
+    public Contact(String name, List<Phone> phones, List<Email> emails, List<Address> addresses) {
         this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-    }
-
-    public Contact(String name, Map<String, String> labelledPhone, Map<String, String> labelledEmail, Map<String, String> labelledAddress) {
-        this.name = name;
-        this.labelledPhone = labelledPhone;
-        this.labelledEmail = labelledEmail;
-        this.labelledAddress = labelledAddress;
+        this.phones = phones;
+        this.emails = emails;
+        this.addresses = addresses;
     }
 
     public String getName() {
         return name;
     }
 
-    public Map<String, String> getLabelledPhone() {
-        return labelledPhone;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Map<String, String> getLabelledEmail() {
-        return labelledEmail;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public Map<String, String> getLabelledAddress() {
-        return labelledAddress;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
-    public String[] getPhone() {
-        return phone;
+    public List<Email> getEmails() {
+        return emails;
     }
 
-    public String[] getEmail() {
-        return email;
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
     }
 
-    public String[] getAddress() {
-        return address;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public Bitmap getHighResPhoto() {
-        return highResPhoto;
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
-    public Bitmap getThumbnailPhoto() {
+    public byte[] getThumbnailPhoto() {
         return thumbnailPhoto;
     }
 
-    public void setThumbnailPhoto(Bitmap thumbnailPhoto) {
+    public void setThumbnailPhoto(byte[] thumbnailPhoto) {
         this.thumbnailPhoto = thumbnailPhoto;
     }
 
-    public void setHighResPhoto(Bitmap highResPhoto) {
+    public byte[] getHighResPhoto() {
+        return highResPhoto;
+    }
+
+    public void setHighResPhoto(byte[] highResPhoto) {
         this.highResPhoto = highResPhoto;
     }
 }

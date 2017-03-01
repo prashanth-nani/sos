@@ -8,15 +8,7 @@ public class EmergencyContact {
     private int id;
     private String name;
 
-    public EmergencyContact() {
-    }
-
     public EmergencyContact(String name) {
-        this.name = name;
-    }
-
-    public EmergencyContact(int id, String name) {
-        this.id = id;
         this.name = name;
     }
 

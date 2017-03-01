@@ -1,34 +1,16 @@
-package in.ac.mnnit.sos.database.entity;
+package in.ac.mnnit.sos.models;
 
 /**
  * Created by prashanth on 1/3/17.
  */
 
-public class EcontactAddress {
-    private int id;
-    private int contactID;
+public class Address {
     private String address;
     private String type;
 
-    public EcontactAddress(String address, String type) {
+    public Address(String address, String type) {
         this.address = address;
         this.type = type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getContactID() {
-        return contactID;
-    }
-
-    public void setContactID(int contactID) {
-        this.contactID = contactID;
     }
 
     public String getAddress() {

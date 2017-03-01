@@ -5,9 +5,6 @@ package in.ac.mnnit.sos.database.entity;
  */
 
 public class DataType {
-    private int id;
-    private String type;
-
     static final String TYPE_HOME = "Home";
     static final String TYPE_MOBILE = "Mobile";
     static final String TYPE_WORK = "Work";
@@ -18,4 +15,17 @@ public class DataType {
     static final String TYPE_WORK_MOBILE = "Work Mobile";
     static final String TYPE_OTHER = "Other";
     static final String TYPE_CUSTOM = "Custom";
+
+    public static final String[] type = new String[]{
+            TYPE_HOME,
+            TYPE_MOBILE,
+            TYPE_WORK,
+            TYPE_MAIN,
+            TYPE_WORK_FAX,
+            TYPE_HOME_FAX,
+            TYPE_PAGER,
+            TYPE_WORK_MOBILE,
+            TYPE_OTHER,
+            TYPE_CUSTOM
+    };
 }
