@@ -13,15 +13,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "sos";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String USER_TABLE = "user";
-    private static final String PHONE_TABLE = "user_phone";
-    private static final String EMAIL_TABLE = "user_email";
-    private static final String ADDRESS_TABLE = "user_address";
+    private static final String EMERGENCY_CONTACT_TABLE = "emergency_contact";
+    private static final String PHONE_TABLE = "econtact_phone";
+    private static final String EMAIL_TABLE = "econtact_email";
+    private static final String ADDRESS_TABLE = "econtact_address";
     private static final String TYPE_TABLE = "data_type";
 
     // USER TABLE COLUMNS
-    private  static final String USER_ID = "_uid";
-    private  static final String USER_NAME = "name";
+    private  static final String ECONTACT_ID = "_id";
+    private  static final String ECONTACT_NAME = "name";
 
     //PHONE TABLE COLUMNS
     private static final String PHONE_ID = "_pid";
@@ -44,10 +44,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //CREATE USER TABLE
-    private static final String CREATE_TABLE_USER = "CREATE TABLE "
-            +USER_TABLE+ " ("
-            +USER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +USER_NAME+" VARCHAR(255) );";
+    private static final String CREATE_TABLE_ECONTACT = "CREATE TABLE "
+            +EMERGENCY_CONTACT_TABLE+ " ("
+            +ECONTACT_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +ECONTACT_NAME+" VARCHAR(255) );";
 
 
 
@@ -93,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+//        db.execSQL("PRAGMA foreign_keys=ON");
     }
 
     @Override
