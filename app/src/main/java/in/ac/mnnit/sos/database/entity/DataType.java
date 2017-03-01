@@ -11,6 +11,10 @@ public class DataType {
     static final String TYPE_HOME = "Home";
     static final String TYPE_MOBILE = "Mobile";
     static final String TYPE_WORK = "Work";
+    static final String TYPE_MAIN = "Main";
+    static final String TYPE_WORK_FAX = "Work Fax";
+    static final String TYPE_HOME_FAX = "Home Fax";
+    static final String TYPE_PAGER = "Pager";
     static final String TYPE_WORK_MOBILE = "Work Mobile";
     static final String TYPE_OTHER = "Other";
     static final String TYPE_CUSTOM = "Custom";
