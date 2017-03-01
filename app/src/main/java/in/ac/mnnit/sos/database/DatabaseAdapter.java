@@ -23,10 +23,12 @@ public class DatabaseAdapter {
 
     DatabaseHelper databaseHelper;
     SQLiteDatabase db;
+    Context context;
 
     public DatabaseAdapter(Context context) {
         this.databaseHelper = new DatabaseHelper(context);
         this.db = databaseHelper.getWritableDatabase();
+        this.context = context;
     }
 
     public void insertEmergencyContact(EmergencyContact eContact, List<EcontactPhone> econtactPhone){
@@ -128,6 +130,11 @@ public class DatabaseAdapter {
             result += c.getString(c.getColumnIndex(DatabaseHelper.ECONTACT_NAME))+"\n";
         }
         return result;
+    }
+
+    public void deleteDatabase(){
+//        db.rawQuery("DROP DATABASE "+DatabaseHelper.DATABASE_NAME+";", null);
+        context.deleteDatabase(DatabaseHelper.DATABASE_NAME);
     }
 
 

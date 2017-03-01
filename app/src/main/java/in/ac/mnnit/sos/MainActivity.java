@@ -38,6 +38,7 @@ import in.ac.mnnit.sos.fragments.dummy.DummyContent;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
+import in.ac.mnnit.sos.services.LogoutUser;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_logout){
+            LogoutUser logoutUser = new LogoutUser(getApplicationContext());
+            logoutUser.logout();
         }
 
         return super.onOptionsItemSelected(item);
