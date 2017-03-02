@@ -14,16 +14,19 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/card_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:background="#335f7c">
+            android:background="#2e8cae">
 
             <LinearLayout
+                android:id="@+id/card_image_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4">
+                android:layout_weight="3"
+                android:orientation="horizontal">
 
                 <in.ac.mnnit.sos.extras.RoundedImageView
                     android:layout_width="50dp"
@@ -38,45 +41,81 @@
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     android:text="Hello" />
-            </LinearLayout>
-            <ImageButton
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_delete" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_edit"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_delete" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_more_vert"/>
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/contact_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:padding="10dp"
-            android:orientation="vertical">
+            android:background="#FFF">
 
-            <TextView
-                android:id="@+id/content"
-                android:textSize="15sp"
-                android:drawableLeft="@drawable/ic_call"
-                android:drawablePadding="5dp"
+            <LinearLayout
+                android:id="@+id/contact_type"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
-                android:drawableLeft="@drawable/ic_email"
-                android:drawablePadding="5dp"
-                android:text="prashanth1395@gmail.com"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:id="@+id/phone_title_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <TextView
-                android:drawableLeft="@drawable/ic_person_location"
-                android:drawablePadding="5dp"
-                android:text="Hyderabad, India"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/type_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="#c0c0c0"/>
+
+                    <TextView
+                        android:id="@+id/content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

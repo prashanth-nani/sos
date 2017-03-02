@@ -8,6 +8,10 @@ public class Phone {
     private String number;
     private String type;
 
+    public Phone(){
+
+    }
+
     public Phone(String number, String type) {
         this.number = number;
         this.type = type;

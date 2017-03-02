@@ -8,6 +8,10 @@ public class Address {
     private String address;
     private String type;
 
+    public Address(){
+
+    }
+
     public Address(String address, String type) {
         this.address = address;
         this.type = type;

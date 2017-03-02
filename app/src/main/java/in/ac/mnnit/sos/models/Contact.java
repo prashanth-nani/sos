@@ -17,6 +17,9 @@ public class Contact {
     private byte[] thumbnailPhoto = null;
     private byte[] highResPhoto = null;
 
+    public Contact(){
+
+    }
 
     public Contact(String name, List<Phone> phones, List<Email> emails, List<Address> addresses) {
         this.name = name;

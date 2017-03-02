@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.mnnit.sos.database.entity.DataType;
@@ -14,6 +15,10 @@ import in.ac.mnnit.sos.database.entity.EcontactAddress;
 import in.ac.mnnit.sos.database.entity.EcontactEmail;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
+import in.ac.mnnit.sos.models.Address;
+import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.models.Email;
+import in.ac.mnnit.sos.models.Phone;
 
 /**
  * Created by prashanth on 1/3/17.
@@ -21,12 +26,11 @@ import in.ac.mnnit.sos.database.entity.EmergencyContact;
 
 public class LocalDatabaseAdapter {
 
-    DatabaseHelper databaseHelper;
-    SQLiteDatabase db;
-    Context context;
+    private SQLiteDatabase db;
+    private Context context;
 
     public LocalDatabaseAdapter(Context context) {
-        this.databaseHelper = new DatabaseHelper(context);
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
         this.db = databaseHelper.getWritableDatabase();
         this.context = context;
     }
@@ -90,55 +94,125 @@ public class LocalDatabaseAdapter {
                 db.execSQL(insertAddressQuery);
             }
         }
-
-//        if(econtactPhone != null) {
-//            for (EcontactPhone ecPhone : econtactPhone) {
-//                contentValues.clear();
-//                contentValues.put(DatabaseHelper.PHONE_CONTACT_ID, CONTACT_ID);
-//                contentValues.put(DatabaseHelper.PHONE, ecPhone.getPhoneNumber());
-//                contentValues.put(DatabaseHelper.PHONE_TYPE_ID, ecPhone.getTypeID());
-//
-//                db.insert(DatabaseHelper.PHONE_TABLE, null, contentValues);
-//            }
-//        }
-//
-//        if(econtactEmail != null){
-//            for(EcontactEmail ecEmail: econtactEmail){
-//                contentValues.clear();
-//                contentValues.put(DatabaseHelper.EMAIL_CONTACT_ID, CONTACT_ID);
-//                contentValues.put(DatabaseHelper.EMAIL, ecEmail.getEmailID());
-//                contentValues.put(DatabaseHelper.EMAIL_TYPE_ID, ecEmail.getTypeID());
-//
-//                db.insert(DatabaseHelper.EMAIL_TABLE, null, contentValues);
-//            }
-//        }
-//
-//        if(econtactAddress != null){
-//            for(EcontactAddress ecAddress: econtactAddress){
-//                contentValues.clear();
-//                contentValues.put(DatabaseHelper.ADDRESS_CONTACT_ID, CONTACT_ID);
-//                contentValues.put(DatabaseHelper.ADDRESS, ecAddress.getAddress());
-//                contentValues.put(DatabaseHelper.ADDRESS_TYPE_ID, ecAddress.getTypeID());
-//
-//                db.insert(DatabaseHelper.ADDRESS_TABLE, null, contentValues);
-//            }
-//        }
-
         return CONTACT_ID;
     }
 
-    public String getAllEmergencyContacts(){
-        Cursor c = db.query(DatabaseHelper.EMERGENCY_CONTACT_TABLE, new String[]{DatabaseHelper.ECONTACT_ID, DatabaseHelper.ECONTACT_NAME}, null, null, null, null, null);
-        String result = "";
-        while (c.moveToNext()){
-            result += c.getInt(c.getColumnIndex(DatabaseHelper.ECONTACT_ID))+" ";
-            result += c.getString(c.getColumnIndex(DatabaseHelper.ECONTACT_NAME))+"\n";
+    public List<Contact> getAllEmergencyContacts(){
+        List<Contact> contacts = new ArrayList<>();
+        Cursor contactCursor = db.query(DatabaseHelper.EMERGENCY_CONTACT_TABLE, new String[]{DatabaseHelper.ECONTACT_ID, DatabaseHelper.ECONTACT_NAME, DatabaseHelper.ECONTACT_PHOTO}, null, null, null, null, null);
+
+        int ID_INDEX = contactCursor.getColumnIndex(DatabaseHelper.ECONTACT_ID);
+        int NAME_INDEX = contactCursor.getColumnIndex(DatabaseHelper.ECONTACT_NAME);
+        int PHOTO_INDEX = contactCursor.getColumnIndex(DatabaseHelper.ECONTACT_PHOTO);
+
+        while (contactCursor.moveToNext()){
+            Contact contact = new Contact();
+
+            int contactID = contactCursor.getInt(ID_INDEX);
+            contact.setName(contactCursor.getString(NAME_INDEX));
+            contact.setHighResPhoto(contactCursor.getBlob(PHOTO_INDEX));
+            contact.setPhones(getPhoneListByContactID(contactID));
+            contact.setEmails(getEmailListByContactID(contactID));
+            contact.setAddresses(getAddressListByContactID(contactID));
+
+            contacts.add(contact);
         }
-        return result;
+
+        contactCursor.close();
+        return contacts;
+    }
+
+    public List<Phone> getPhoneListByContactID(int contactID){
+        List<Phone> phones = new ArrayList<>();
+        String selectPhoneQuery = "SELECT "
+                +DatabaseHelper.PHONE_TABLE+"."+DatabaseHelper.PHONE+", "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATA_TYPE+" "
+                +"FROM "
+                +DatabaseHelper.PHONE_TABLE+" LEFT JOIN "+DatabaseHelper.DATATYPE_TABLE+" "
+                +"ON "
+                +DatabaseHelper.PHONE_TABLE+"."+DatabaseHelper.PHONE_TYPE_ID+" = "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATATYPE_ID+" "
+                +"WHERE "
+                +DatabaseHelper.PHONE_TABLE+"."+DatabaseHelper.PHONE_CONTACT_ID+" = ?;";
+
+        Log.e("TAG", selectPhoneQuery);
+        Cursor phoneCursor = db.rawQuery(selectPhoneQuery, new String[]{String.valueOf(contactID)});
+
+        int NUMBER_INDEX = phoneCursor.getColumnIndex(DatabaseHelper.PHONE);
+        int DATATYPE_INDEX = phoneCursor.getColumnIndex(DatabaseHelper.DATA_TYPE);
+
+        while(phoneCursor.moveToNext()){
+            Phone phone = new Phone();
+            phone.setNumber(phoneCursor.getString(NUMBER_INDEX));
+            phone.setType(phoneCursor.getString(DATATYPE_INDEX));
+            phones.add(phone);
+        }
+
+        phoneCursor.close();
+        return phones;
+    }
+
+    public List<Email> getEmailListByContactID(int contactID){
+        List<Email> emails = new ArrayList<>();
+        String selectEmailQuery = "SELECT "
+                +DatabaseHelper.EMAIL_TABLE+"."+DatabaseHelper.EMAIL+", "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATA_TYPE+" "
+                +"FROM "
+                +DatabaseHelper.EMAIL_TABLE+" LEFT JOIN "+DatabaseHelper.DATATYPE_TABLE+" "
+                +"ON "
+                +DatabaseHelper.EMAIL_TABLE+"."+DatabaseHelper.EMAIL_TYPE_ID+" = "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATATYPE_ID+" "
+                +"WHERE "
+                +DatabaseHelper.EMAIL_TABLE+"."+DatabaseHelper.EMAIL_CONTACT_ID+" = ?;";
+
+        Log.e("TAG", selectEmailQuery);
+        Cursor emailCursor = db.rawQuery(selectEmailQuery, new String[]{String.valueOf(contactID)});
+
+        int EMAIL_INDEX = emailCursor.getColumnIndex(DatabaseHelper.EMAIL);
+        int DATATYPE_INDEX = emailCursor.getColumnIndex(DatabaseHelper.DATA_TYPE);
+
+        while(emailCursor.moveToNext()){
+            Email email = new Email();
+            email.setEmailID(emailCursor.getString(EMAIL_INDEX));
+            email.setType(emailCursor.getString(DATATYPE_INDEX));
+            emails.add(email);
+        }
+
+        emailCursor.close();
+        return emails;
+    }
+
+    public List<Address> getAddressListByContactID(int contactID){
+        List<Address> addresses = new ArrayList<>();
+        String selectAddressQuery = "SELECT "
+                +DatabaseHelper.ADDRESS_TABLE+"."+DatabaseHelper.ADDRESS+", "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATA_TYPE+" "
+                +"FROM "
+                +DatabaseHelper.ADDRESS_TABLE+" LEFT JOIN "+DatabaseHelper.DATATYPE_TABLE+" "
+                +"ON "
+                +DatabaseHelper.ADDRESS_TABLE+"."+DatabaseHelper.ADDRESS_TYPE_ID+" = "
+                +DatabaseHelper.DATATYPE_TABLE+"."+DatabaseHelper.DATATYPE_ID+" "
+                +"WHERE "
+                +DatabaseHelper.ADDRESS_TABLE+"."+DatabaseHelper.ADDRESS_CONTACT_ID+" = ?;";
+
+        Log.e("TAG", selectAddressQuery);
+        Cursor addressCursor = db.rawQuery(selectAddressQuery, new String[]{String.valueOf(contactID)});
+
+        int ADDRESS_INDEX = addressCursor.getColumnIndex(DatabaseHelper.ADDRESS);
+        int DATATYPE_INDEX = addressCursor.getColumnIndex(DatabaseHelper.DATA_TYPE);
+
+        while(addressCursor.moveToNext()){
+            Address address = new Address();
+            address.setAddress(addressCursor.getString(ADDRESS_INDEX));
+            address.setType(addressCursor.getString(DATATYPE_INDEX));
+            addresses.add(address);
+        }
+
+        addressCursor.close();
+        return addresses;
     }
 
     public void deleteDatabase(){
-//        db.rawQuery("DROP DATABASE "+DatabaseHelper.DATABASE_NAME+";", null);
         context.deleteDatabase(DatabaseHelper.DATABASE_NAME);
     }
 

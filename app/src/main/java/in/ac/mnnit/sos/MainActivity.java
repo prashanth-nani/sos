@@ -123,10 +123,15 @@ public class MainActivity extends AppCompatActivity
                 LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getApplicationContext());
                 localDatabaseAdapter.insertEmergencyContact(eContact, econtactPhones);
 
-                String result = localDatabaseAdapter.getAllEmergencyContacts();
-                Log.e("TAG", result);
+                List<Contact> contacts = localDatabaseAdapter.getAllEmergencyContacts();
+                for (Contact singleContact: contacts){
+                    Log.e("TAG", singleContact.getName());
+                    for(Phone phone: singleContact.getPhones()){
+                        Log.e("TAG", phone.getNumber()+" "+phone.getType());
+                    }
+                }
 
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }

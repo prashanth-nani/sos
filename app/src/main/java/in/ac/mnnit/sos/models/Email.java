@@ -8,6 +8,10 @@ public class Email {
     private String emailID;
     private String type;
 
+    public Email(){
+
+    }
+
     public Email(String emailID, String type) {
         this.emailID = emailID;
         this.type = type;
