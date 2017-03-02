@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.ProcessEmailActivity;
-import in.ac.mnnit.sos.database.DatabaseAdapter;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -22,8 +21,8 @@ public class LogoutUser {
     }
 
     public void logout(){
-        DatabaseAdapter databaseAdapter = new DatabaseAdapter(context);
-        databaseAdapter.deleteDatabase();
+        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(context);
+        localDatabaseAdapter.deleteDatabase();
         SharedPreferences sharedPreferences = context.getSharedPreferences("session", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("loggedin", false);

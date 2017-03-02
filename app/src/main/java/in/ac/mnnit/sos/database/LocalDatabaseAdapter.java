@@ -19,13 +19,13 @@ import in.ac.mnnit.sos.database.entity.EmergencyContact;
  * Created by prashanth on 1/3/17.
  */
 
-public class DatabaseAdapter {
+public class LocalDatabaseAdapter {
 
     DatabaseHelper databaseHelper;
     SQLiteDatabase db;
     Context context;
 
-    public DatabaseAdapter(Context context) {
+    public LocalDatabaseAdapter(Context context) {
         this.databaseHelper = new DatabaseHelper(context);
         this.db = databaseHelper.getWritableDatabase();
         this.context = context;
@@ -38,6 +38,7 @@ public class DatabaseAdapter {
     public long insertEmergencyContact(EmergencyContact eContact, List<EcontactPhone> econtactPhone, List<EcontactEmail> econtactEmail, EcontactAddress[] econtactAddress){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.ECONTACT_NAME, eContact.getName());
+        contentValues.put(DatabaseHelper.ECONTACT_PHOTO, eContact.getPhotoBytes());
 
         long CONTACT_ID = db.insert(DatabaseHelper.EMERGENCY_CONTACT_TABLE, null, contentValues);
 
@@ -52,7 +53,8 @@ public class DatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
                         + DatabaseHelper.DATA_TYPE+" IS \""+ecPhone.getType()+"\";";
 
-                db.rawQuery(insertPhoneQuery, new String[]{});
+                Log.e("TAG", insertPhoneQuery);
+                db.execSQL(insertPhoneQuery);
             }
         }
 
@@ -67,7 +69,8 @@ public class DatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
                         + DatabaseHelper.DATA_TYPE+" IS \""+ecEmail.getType()+"\";";
 
-                db.rawQuery(insertEmailQuery, new String[]{});
+                Log.e("TAG", insertEmailQuery);
+                db.execSQL(insertEmailQuery);
             }
         }
 
@@ -82,7 +85,9 @@ public class DatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
                         + DatabaseHelper.DATA_TYPE+" IS \""+ecAddress.getType()+"\";";
 
-                db.rawQuery(insertAddressQuery, new String[]{});
+                Log.e("TAG", insertAddressQuery);
+
+                db.execSQL(insertAddressQuery);
             }
         }
 
@@ -255,12 +260,14 @@ public class DatabaseAdapter {
             onCreate(db);
         }
 
-        private long populateDatatypeTable(SQLiteDatabase db){
+        private void populateDatatypeTable(SQLiteDatabase db){
             ContentValues contentValues = new ContentValues();
-            for(String type: DataType.type)
+            for(String type: DataType.type) {
+                Log.e("TAG", type);
+                contentValues.clear();
                 contentValues.put(DatabaseHelper.DATA_TYPE, type);
-
-            return db.insert(DatabaseHelper.DATATYPE_TABLE, null, contentValues);
+                db.insert(DatabaseHelper.DATATYPE_TABLE, null, contentValues);
+            }
         }
     }
 }

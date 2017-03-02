@@ -71,4 +71,9 @@ public class Utils {
         photo.compress(Bitmap.CompressFormat.PNG, 1, stream);
         return stream.toByteArray();
     }
+
+    public boolean isValidEmail(String email){
+        //Implement this method. Return false if invalid
+        return true;
+    }
 }

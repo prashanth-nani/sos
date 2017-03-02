@@ -7,6 +7,7 @@ package in.ac.mnnit.sos.database.entity;
 public class EmergencyContact {
     private int id;
     private String name;
+    private byte[] photoBytes;
 
     public EmergencyContact(String name) {
         this.name = name;
@@ -26,5 +27,13 @@ public class EmergencyContact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public byte[] getPhotoBytes() {
+        return photoBytes;
+    }
+
+    public void setPhotoBytes(byte[] photoBytes) {
+        this.photoBytes = photoBytes;
     }
 }

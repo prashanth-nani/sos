@@ -10,7 +10,9 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.models.Address;
@@ -71,37 +73,42 @@ public class ContactServiceHelper {
                     new String[]{contactID}, null);
 
             assert pCursor != null;
+            Set<String> tempPhone = new HashSet<>();
             while (pCursor.moveToNext()) {
                 int phoneType = pCursor.getInt(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                 String phoneNo = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 name = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                switch (phoneType) {
-                    case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                        Log.e(name + ": TYPE_MOBILE", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Mobile"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
-                        Log.e(name + ": TYPE_HOME", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Home"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
-                        Log.e(name + ": TYPE_WORK", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Work"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE:
-                        Log.e(name + ": TYPE_WORK_MOBILE", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Work Mobile"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
-                        Log.e(name + ": TYPE_OTHER", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Other"));
-                        break;
-                    case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
-                        Log.e(name + ": TYPE_CUSTOM", " " + phoneNo);
-                        phone.add(new Phone(phoneNo, "Custom"));
-                        break;
-                    default:
-                        break;
+                phoneNo = phoneNo.replaceAll(" ", "");
+                if(!tempPhone.contains(phoneNo)) {
+                    tempPhone.add(phoneNo);
+                    switch (phoneType) {
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                            Log.e(name + ": TYPE_MOBILE", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Mobile"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+                            Log.e(name + ": TYPE_HOME", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Home"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+                            Log.e(name + ": TYPE_WORK", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Work"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE:
+                            Log.e(name + ": TYPE_WORK_MOBILE", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Work Mobile"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
+                            Log.e(name + ": TYPE_OTHER", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Other"));
+                            break;
+                        case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
+                            Log.e(name + ": TYPE_CUSTOM", " " + phoneNo);
+                            phone.add(new Phone(phoneNo, "Custom"));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             pCursor.close();
@@ -115,28 +122,32 @@ public class ContactServiceHelper {
                     new String[]{contactID}, null);
 
             assert eCursor != null;
+            Set<String> tempEmail = new HashSet<>();
             while (eCursor.moveToNext()) {
                 int emailType = eCursor.getInt(eCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE));
                 String emailID = eCursor.getString(eCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
-                switch (emailType) {
-                    case ContactsContract.CommonDataKinds.Email.TYPE_HOME:
-                        Log.e(name + ": TYPE_HOME", " " + emailID);
-                        email.add(new Email(emailID, "Home"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Email.TYPE_WORK:
-                        Log.e(name + ": TYPE_WORK", " " + emailID);
-                        email.add(new Email(emailID, "Work"));
-                        break;
-                    case ContactsContract.CommonDataKinds.Email.TYPE_OTHER:
-                        Log.e(name + ": TYPE_OTHER", " " + emailID);
-                        email.add(new Email(emailID, "Other"));
-                        break;
-                    case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
-                        Log.e(name + ": TYPE_CUSTOM", " " + emailID);
-                        email.add(new Email(emailID, "Custom"));
-                        break;
-                    default:
-                        break;
+                if(!tempEmail.contains(emailID)) {
+                    tempEmail.add(emailID);
+                    switch (emailType) {
+                        case ContactsContract.CommonDataKinds.Email.TYPE_HOME:
+                            Log.e(name + ": TYPE_HOME", " " + emailID);
+                            email.add(new Email(emailID, "Home"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Email.TYPE_WORK:
+                            Log.e(name + ": TYPE_WORK", " " + emailID);
+                            email.add(new Email(emailID, "Work"));
+                            break;
+                        case ContactsContract.CommonDataKinds.Email.TYPE_OTHER:
+                            Log.e(name + ": TYPE_OTHER", " " + emailID);
+                            email.add(new Email(emailID, "Other"));
+                            break;
+                        case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
+                            Log.e(name + ": TYPE_CUSTOM", " " + emailID);
+                            email.add(new Email(emailID, "Custom"));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             eCursor.close();
@@ -150,28 +161,32 @@ public class ContactServiceHelper {
                     new String[]{contactID}, null);
 
             assert aCursor != null;
+            Set<String> tempAddress = new HashSet<>();
             while (aCursor.moveToNext()) {
                 int addressType = aCursor.getInt(aCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.TYPE));
                 String personAddress = aCursor.getString(aCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS));
-                switch (addressType) {
-                    case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_HOME:
-                        Log.e(name + ": TYPE_HOME", " " + personAddress);
-                        address.add(new Address(personAddress, "Home"));
-                        break;
-                    case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK:
-                        Log.e(name + ": TYPE_WORK", " " + personAddress);
-                        address.add(new Address(personAddress, "Work"));
-                        break;
-                    case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_OTHER:
-                        Log.e(name + ": TYPE_OTHER", " " + personAddress);
-                        address.add(new Address(personAddress, "Other"));
-                        break;
-                    case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM:
-                        Log.e(name + ": TYPE_CUSTOM", " " + personAddress);
-                        address.add(new Address(personAddress, "CUSTOM"));
-                        break;
-                    default:
-                        break;
+                if(!tempAddress.contains(personAddress)) {
+                    tempAddress.add(personAddress);
+                    switch (addressType) {
+                        case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_HOME:
+                            Log.e(name + ": TYPE_HOME", " " + personAddress);
+                            address.add(new Address(personAddress, "Home"));
+                            break;
+                        case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK:
+                            Log.e(name + ": TYPE_WORK", " " + personAddress);
+                            address.add(new Address(personAddress, "Work"));
+                            break;
+                        case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_OTHER:
+                            Log.e(name + ": TYPE_OTHER", " " + personAddress);
+                            address.add(new Address(personAddress, "Other"));
+                            break;
+                        case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM:
+                            Log.e(name + ": TYPE_CUSTOM", " " + personAddress);
+                            address.add(new Address(personAddress, "CUSTOM"));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             aCursor.close();

@@ -1,7 +1,6 @@
 package in.ac.mnnit.sos;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.ac.mnnit.sos.database.DatabaseAdapter;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
@@ -112,15 +111,19 @@ public class MainActivity extends AppCompatActivity
                 Contact contact = contactServiceHelper.getContact();
 
                 EmergencyContact eContact = new EmergencyContact(contact.getName());
+                byte[] photo = contact.getHighResPhoto();
+                if(photo != null)
+                    eContact.setPhotoBytes(contact.getHighResPhoto());
+
                 List<EcontactPhone> econtactPhones = new ArrayList<>();
                 for(Phone phone: contact.getPhones()){
                     econtactPhones.add(new EcontactPhone(phone.getNumber(), phone.getType()));
                 }
 
-                DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
-                databaseAdapter.insertEmergencyContact(eContact, econtactPhones);
+                LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getApplicationContext());
+                localDatabaseAdapter.insertEmergencyContact(eContact, econtactPhones);
 
-                String result = databaseAdapter.getAllEmergencyContacts();
+                String result = localDatabaseAdapter.getAllEmergencyContacts();
                 Log.e("TAG", result);
 
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
