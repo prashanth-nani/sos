@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import in.ac.mnnit.sos.database.entity.EcontactAddress;
 import in.ac.mnnit.sos.database.entity.EcontactEmail;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
-import in.ac.mnnit.sos.fragments.MyContactRecyclerViewAdapter;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
@@ -30,7 +28,7 @@ public class LocalDatabaseAdapter {
 
     private SQLiteDatabase db;
     private Context context;
-    public static MyContactRecyclerViewAdapter contactsViewAdapter;
+    public static OnDatabaseChangeListener contactsViewAdapter;
 
     public LocalDatabaseAdapter(Context context) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -60,7 +58,6 @@ public class LocalDatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
                         + DatabaseHelper.DATA_TYPE+" IS \""+ecPhone.getType()+"\";";
 
-                Log.e("TAG", insertPhoneQuery);
                 db.execSQL(insertPhoneQuery);
             }
         }
@@ -76,7 +73,6 @@ public class LocalDatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
                         + DatabaseHelper.DATA_TYPE+" IS \""+ecEmail.getType()+"\";";
 
-                Log.e("TAG", insertEmailQuery);
                 db.execSQL(insertEmailQuery);
             }
         }
@@ -92,13 +88,10 @@ public class LocalDatabaseAdapter {
                         + DatabaseHelper.DATATYPE_ID + " FROM " + DatabaseHelper.DATATYPE_TABLE + " WHERE "
                         + DatabaseHelper.DATA_TYPE + " IS \"" + ecAddress.getType() + "\";";
 
-                Log.e("TAG", insertAddressQuery);
-
                 db.execSQL(insertAddressQuery);
             }
         }
-
-        contactsViewAdapter.onContactAddition(getAllEmergencyContacts());
+        contactsViewAdapter.onContactAdd(getAllEmergencyContacts());
         return CONTACT_ID;
     }
 
@@ -140,7 +133,6 @@ public class LocalDatabaseAdapter {
                 +"WHERE "
                 +DatabaseHelper.PHONE_TABLE+"."+DatabaseHelper.PHONE_CONTACT_ID+" = ?;";
 
-        Log.e("TAG", selectPhoneQuery);
         Cursor phoneCursor = db.rawQuery(selectPhoneQuery, new String[]{String.valueOf(contactID)});
 
         int NUMBER_INDEX = phoneCursor.getColumnIndex(DatabaseHelper.PHONE);
@@ -170,7 +162,6 @@ public class LocalDatabaseAdapter {
                 +"WHERE "
                 +DatabaseHelper.EMAIL_TABLE+"."+DatabaseHelper.EMAIL_CONTACT_ID+" = ?;";
 
-        Log.e("TAG", selectEmailQuery);
         Cursor emailCursor = db.rawQuery(selectEmailQuery, new String[]{String.valueOf(contactID)});
 
         int EMAIL_INDEX = emailCursor.getColumnIndex(DatabaseHelper.EMAIL);
@@ -200,7 +191,6 @@ public class LocalDatabaseAdapter {
                 +"WHERE "
                 +DatabaseHelper.ADDRESS_TABLE+"."+DatabaseHelper.ADDRESS_CONTACT_ID+" = ?;";
 
-        Log.e("TAG", selectAddressQuery);
         Cursor addressCursor = db.rawQuery(selectAddressQuery, new String[]{String.valueOf(contactID)});
 
         int ADDRESS_INDEX = addressCursor.getColumnIndex(DatabaseHelper.ADDRESS);
@@ -221,6 +211,11 @@ public class LocalDatabaseAdapter {
         context.deleteDatabase(DatabaseHelper.DATABASE_NAME);
     }
 
+
+    public interface OnDatabaseChangeListener{
+        void onDatabaseListenerInit();
+        void onContactAdd(List<Contact> contacts);
+    }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -324,8 +319,6 @@ public class LocalDatabaseAdapter {
             db.execSQL(CREATE_TABLE_EMAIL);
             db.execSQL(CREATE_TABLE_ADDRESS);
             populateDatatypeTable(db);
-
-            Log.e("TAG", "OnCreate Finished in DB");
         }
 
         @Override
@@ -342,7 +335,6 @@ public class LocalDatabaseAdapter {
         private void populateDatatypeTable(SQLiteDatabase db){
             ContentValues contentValues = new ContentValues();
             for(String type: DataType.type) {
-                Log.e("TAG", type);
                 contentValues.clear();
                 contentValues.put(DatabaseHelper.DATA_TYPE, type);
                 db.insert(DatabaseHelper.DATATYPE_TABLE, null, contentValues);

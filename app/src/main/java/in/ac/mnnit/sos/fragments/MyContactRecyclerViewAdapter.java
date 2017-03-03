@@ -16,7 +16,9 @@ import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Phone;
 
 
-public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder> {
+public class MyContactRecyclerViewAdapter
+        extends RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder>
+        implements LocalDatabaseAdapter.OnDatabaseChangeListener{
 
     private final List<Contact> mContacts;
     private final ContactFragment.OnListFragmentInteractionListener mListener;
@@ -24,6 +26,7 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
     public MyContactRecyclerViewAdapter(List<Contact> contacts, ContactFragment.OnListFragmentInteractionListener listener) {
         mContacts = contacts;
         mListener = listener;
+        onDatabaseListenerInit();
     }
 
     @Override
@@ -74,6 +77,19 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
     @Override
     public int getItemCount() {
         return mContacts.size();
+    }
+
+
+    @Override
+    public void onDatabaseListenerInit() {
+        LocalDatabaseAdapter.contactsViewAdapter = this;
+    }
+
+    @Override
+    public void onContactAdd(List<Contact> contacts) {
+        mContacts.clear();
+        mContacts.addAll(contacts);
+        notifyItemInserted(getItemCount() - 1);
     }
 
 

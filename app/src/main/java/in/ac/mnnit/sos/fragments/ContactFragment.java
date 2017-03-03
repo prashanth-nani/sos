@@ -13,12 +13,7 @@ import android.view.ViewGroup;
 
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
-import in.ac.mnnit.sos.database.ServerDatabaseAdapter;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent.DummyItem;
 import in.ac.mnnit.sos.models.Contact;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -75,9 +70,7 @@ public class ContactFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(context);
-            MyContactRecyclerViewAdapter contactsViewAdapter = new MyContactRecyclerViewAdapter(localDatabaseAdapter.getAllEmergencyContacts(), mListener);
-            LocalDatabaseAdapter.contactsViewAdapter = contactsViewAdapter;
-            recyclerView.setAdapter(contactsViewAdapter);
+            recyclerView.setAdapter(new MyContactRecyclerViewAdapter(localDatabaseAdapter.getAllEmergencyContacts(), mListener));
         }
         return view;
     }
