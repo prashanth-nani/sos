@@ -31,11 +31,9 @@ public class ServerDatabaseAdapter{
     private OnServerResponseListener onServerResponseListener;
     private RequestQueue requestQueue;
 
-    private Config config = new Config();
-    private String BaseUrl = config.getBaseURL();
-    private final String registerUrl = BaseUrl.concat("register.php");
-    private final String processEmailUrl = config.getBaseURL().concat("process_email.php");
-    private String loginUrl = BaseUrl.concat("login.php");
+    private final String registerUrl = Config.REGISTER_URL;
+    private final String processEmailUrl = Config.PROCESS_EMAIL_URL;
+    private String loginUrl = Config.LOGIN_URL;
 
     public ServerDatabaseAdapter(Context context, OnServerResponseListener onServerResponseListener) {
         this.onServerResponseListener = onServerResponseListener;
