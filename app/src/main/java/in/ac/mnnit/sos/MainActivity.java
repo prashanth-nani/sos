@@ -238,6 +238,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onContactDelete(Contact contact, int position){
+        if(new LocalDatabaseAdapter(this).deleteContactByID(contact.getId()))
+            LocalDatabaseAdapter.contactsViewAdapter.onContactDelete(position);
+    }
+
     class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
 
         @Override

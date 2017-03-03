@@ -83,27 +83,21 @@ public class ContactServiceHelper {
                     tempPhone.add(phoneNo);
                     switch (phoneType) {
                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                            Log.e(name + ": TYPE_MOBILE", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Mobile"));
                             break;
                         case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
-                            Log.e(name + ": TYPE_HOME", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Home"));
                             break;
                         case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
-                            Log.e(name + ": TYPE_WORK", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Work"));
                             break;
                         case ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE:
-                            Log.e(name + ": TYPE_WORK_MOBILE", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Work Mobile"));
                             break;
                         case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
-                            Log.e(name + ": TYPE_OTHER", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Other"));
                             break;
                         case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
-                            Log.e(name + ": TYPE_CUSTOM", " " + phoneNo);
                             phone.add(new Phone(phoneNo, "Custom"));
                             break;
                         default:
@@ -130,19 +124,15 @@ public class ContactServiceHelper {
                     tempEmail.add(emailID);
                     switch (emailType) {
                         case ContactsContract.CommonDataKinds.Email.TYPE_HOME:
-                            Log.e(name + ": TYPE_HOME", " " + emailID);
                             email.add(new Email(emailID, "Home"));
                             break;
                         case ContactsContract.CommonDataKinds.Email.TYPE_WORK:
-                            Log.e(name + ": TYPE_WORK", " " + emailID);
                             email.add(new Email(emailID, "Work"));
                             break;
                         case ContactsContract.CommonDataKinds.Email.TYPE_OTHER:
-                            Log.e(name + ": TYPE_OTHER", " " + emailID);
                             email.add(new Email(emailID, "Other"));
                             break;
                         case ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM:
-                            Log.e(name + ": TYPE_CUSTOM", " " + emailID);
                             email.add(new Email(emailID, "Custom"));
                             break;
                         default:
@@ -169,19 +159,15 @@ public class ContactServiceHelper {
                     tempAddress.add(personAddress);
                     switch (addressType) {
                         case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_HOME:
-                            Log.e(name + ": TYPE_HOME", " " + personAddress);
                             address.add(new Address(personAddress, "Home"));
                             break;
                         case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK:
-                            Log.e(name + ": TYPE_WORK", " " + personAddress);
                             address.add(new Address(personAddress, "Work"));
                             break;
                         case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_OTHER:
-                            Log.e(name + ": TYPE_OTHER", " " + personAddress);
                             address.add(new Address(personAddress, "Other"));
                             break;
                         case ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM:
-                            Log.e(name + ": TYPE_CUSTOM", " " + personAddress);
                             address.add(new Address(personAddress, "CUSTOM"));
                             break;
                         default:

@@ -110,5 +110,6 @@ public class ContactFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Contact contact);
+        void onContactDelete(Contact contact, int position);
     }
 }

@@ -109,6 +109,7 @@ public class LocalDatabaseAdapter {
             Contact contact = new Contact();
 
             int contactID = contactCursor.getInt(ID_INDEX);
+            contact.setId(contactID);
             contact.setName(contactCursor.getString(NAME_INDEX));
             contact.setHighResPhoto(contactCursor.getBlob(PHOTO_INDEX));
             contact.setPhones(getPhoneListByContactID(contactID));
@@ -209,6 +210,11 @@ public class LocalDatabaseAdapter {
         return addresses;
     }
 
+    public boolean deleteContactByID(int CONTACT_ID){
+        boolean result = db.delete(DatabaseHelper.EMERGENCY_CONTACT_TABLE, DatabaseHelper.ECONTACT_ID+"=?", new String[]{String.valueOf(CONTACT_ID)}) > 0;
+        return result;
+    }
+
     public void deleteDatabase(){
         context.deleteDatabase(DatabaseHelper.DATABASE_NAME);
     }
@@ -217,6 +223,7 @@ public class LocalDatabaseAdapter {
     public interface OnDatabaseChangeListener{
         void onDatabaseListenerInit();
         void onContactAdd(List<Contact> contacts);
+        void onContactDelete(int position);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

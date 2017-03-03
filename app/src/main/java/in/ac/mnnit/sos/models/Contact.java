@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public class Contact {
+    private int id;
     private String name = null;
     private List<Phone> phones = new ArrayList<>();
     private List<Email> emails = new ArrayList<>();
@@ -26,6 +27,14 @@ public class Contact {
         this.phones = phones;
         this.emails = emails;
         this.addresses = addresses;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
