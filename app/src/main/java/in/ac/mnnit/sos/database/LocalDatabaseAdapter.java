@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -271,8 +273,8 @@ public class LocalDatabaseAdapter {
                 + PHONE_CONTACT_ID + " INTEGER, "
                 + PHONE + " VARCHAR(255), "
                 + PHONE_TYPE_ID + " INTEGER, "
-                + "FOREIGN KEY (" + PHONE_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + "), "
-                + "FOREIGN KEY (" + PHONE_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + "));";
+                + "FOREIGN KEY (" + PHONE_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + ") ON DELETE CASCADE, "
+                + "FOREIGN KEY (" + PHONE_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + ") ON DELETE CASCADE);";
 
 
         //CREATE EMAIL TABLE
@@ -282,8 +284,8 @@ public class LocalDatabaseAdapter {
                 + EMAIL_CONTACT_ID + " INTEGER, "
                 + EMAIL + " VARCHAR(255), "
                 + EMAIL_TYPE_ID + " INTEGER, "
-                + "FOREIGN KEY (" + EMAIL_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + "), "
-                + "FOREIGN KEY (" + EMAIL_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + "));";
+                + "FOREIGN KEY (" + EMAIL_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + ") ON DELETE CASCADE, "
+                + "FOREIGN KEY (" + EMAIL_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + ") ON DELETE CASCADE);";
 
         //CREATE ADDRESS TABLE
         private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE "
@@ -292,8 +294,8 @@ public class LocalDatabaseAdapter {
                 + ADDRESS_CONTACT_ID + " INTEGER, "
                 + ADDRESS + " VARCHAR(255), "
                 + ADDRESS_TYPE_ID + " INTEGER, "
-                + "FOREIGN KEY (" + ADDRESS_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + "), "
-                + "FOREIGN KEY (" + ADDRESS_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + "));";
+                + "FOREIGN KEY (" + ADDRESS_TYPE_ID + ") REFERENCES " + DATATYPE_TABLE + "(" + DATATYPE_ID + ") ON DELETE CASCADE, "
+                + "FOREIGN KEY (" + ADDRESS_CONTACT_ID + ") REFERENCES " + EMERGENCY_CONTACT_TABLE + "(" + ECONTACT_ID + ") ON DELETE CASCADE);";
 
 
         //CREATE DATATYPE TABLE
@@ -330,6 +332,13 @@ public class LocalDatabaseAdapter {
             db.execSQL(DROP_TABLE_IF_EXISTS + EMERGENCY_CONTACT_TABLE);
 
             onCreate(db);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        public void onConfigure(SQLiteDatabase db) {
+            super.onConfigure(db);
+            db.setForeignKeyConstraintsEnabled(true);
         }
 
         private void populateDatatypeTable(SQLiteDatabase db){
