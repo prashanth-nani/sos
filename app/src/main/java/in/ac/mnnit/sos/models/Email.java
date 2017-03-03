@@ -5,8 +5,8 @@ package in.ac.mnnit.sos.models;
  */
 
 public class Email {
-    private String emailID;
-    private String type;
+    private String emailID = null;
+    private String type = null;
 
     public Email(){
 

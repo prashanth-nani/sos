@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import in.ac.mnnit.sos.database.entity.EcontactAddress;
 import in.ac.mnnit.sos.database.entity.EcontactEmail;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
+import in.ac.mnnit.sos.fragments.MyContactRecyclerViewAdapter;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
@@ -28,6 +30,7 @@ public class LocalDatabaseAdapter {
 
     private SQLiteDatabase db;
     private Context context;
+    public static MyContactRecyclerViewAdapter contactsViewAdapter;
 
     public LocalDatabaseAdapter(Context context) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -86,14 +89,16 @@ public class LocalDatabaseAdapter {
                         + DatabaseHelper.ADDRESS + ", "
                         + DatabaseHelper.ADDRESS_TYPE_ID + ") "
                         + "SELECT \"" + CONTACT_ID + "\", \"" + ecAddress.getAddress() + "\", "
-                        + DatabaseHelper.DATATYPE_ID+" FROM "+DatabaseHelper.DATATYPE_TABLE+" WHERE "
-                        + DatabaseHelper.DATA_TYPE+" IS \""+ecAddress.getType()+"\";";
+                        + DatabaseHelper.DATATYPE_ID + " FROM " + DatabaseHelper.DATATYPE_TABLE + " WHERE "
+                        + DatabaseHelper.DATA_TYPE + " IS \"" + ecAddress.getType() + "\";";
 
                 Log.e("TAG", insertAddressQuery);
 
                 db.execSQL(insertAddressQuery);
             }
         }
+
+        contactsViewAdapter.onContactAddition(getAllEmergencyContacts());
         return CONTACT_ID;
     }
 

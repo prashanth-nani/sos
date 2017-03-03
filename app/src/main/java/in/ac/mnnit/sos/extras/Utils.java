@@ -2,6 +2,7 @@ package in.ac.mnnit.sos.extras;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -69,6 +70,10 @@ public class Utils {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.PNG, 1, stream);
         return stream.toByteArray();
+    }
+
+    public Bitmap getBitmapFromBytes(byte[] photoBytes){
+        return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
     }
 
     public boolean isValidEmail(String email){

@@ -6,19 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import in.ac.mnnit.sos.R;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent.DummyItem;
-
 import java.util.List;
+
+import in.ac.mnnit.sos.R;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.extras.RoundedImageView;
+import in.ac.mnnit.sos.extras.Utils;
+import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.models.Phone;
 
 
 public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Contact> mContacts;
     private final ContactFragment.OnListFragmentInteractionListener mListener;
 
-    public MyContactRecyclerViewAdapter(List<DummyItem> items, ContactFragment.OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyContactRecyclerViewAdapter(List<Contact> contacts, ContactFragment.OnListFragmentInteractionListener listener) {
+        mContacts = contacts;
         mListener = listener;
     }
 
@@ -31,9 +35,23 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = mContacts.get(position);
+        Contact contact = mContacts.get(position);
+        holder.mContactNameView.setText(mContacts.get(position).getName());
+        List<Phone> phones = mContacts.get(position).getPhones();
+        String number;
+        if(phones.size() > 0)
+             number = phones.get(0).getNumber();
+        else
+            number = null;
+        if(number != null)
+            holder.mContentView.setText(number);
+
+        byte[] photo = contact.getHighResPhoto();
+        if(photo != null){
+            Utils utils = new Utils();
+            holder.mContactImageView.setImageBitmap(utils.getBitmapFromBytes(photo));
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,22 +65,31 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
         });
     }
 
+    public void onContactAddition(List<Contact> contacts){
+        mContacts.clear();
+        mContacts.addAll(contacts);
+        this.notifyItemInserted(getItemCount() - 1);
+    }
+
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mContacts.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
+        public final TextView mContactNameView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public final RoundedImageView mContactImageView;
+        public Contact mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            mContactNameView = (TextView) view.findViewById(R.id.contact_name);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mContactImageView = (RoundedImageView) view.findViewById(R.id.contact_photo);
         }
 
         @Override

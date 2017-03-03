@@ -5,8 +5,8 @@ package in.ac.mnnit.sos.models;
  */
 
 public class Address {
-    private String address;
-    private String type;
+    private String address = null;
+    private String type = null;
 
     public Address(){
 

@@ -5,8 +5,8 @@ package in.ac.mnnit.sos.models;
  */
 
 public class Phone {
-    private String number;
-    private String type;
+    private String number = null;
+    private String type = null;
 
     public Phone(){
 

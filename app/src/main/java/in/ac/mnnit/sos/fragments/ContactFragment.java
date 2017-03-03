@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import in.ac.mnnit.sos.R;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.database.ServerDatabaseAdapter;
 import in.ac.mnnit.sos.fragments.dummy.DummyContent;
 import in.ac.mnnit.sos.fragments.dummy.DummyContent.DummyItem;
+import in.ac.mnnit.sos.models.Contact;
 
 import java.util.List;
 
@@ -71,7 +74,10 @@ public class ContactFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyContactRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(context);
+            MyContactRecyclerViewAdapter contactsViewAdapter = new MyContactRecyclerViewAdapter(localDatabaseAdapter.getAllEmergencyContacts(), mListener);
+            LocalDatabaseAdapter.contactsViewAdapter = contactsViewAdapter;
+            recyclerView.setAdapter(contactsViewAdapter);
         }
         return view;
     }
@@ -110,6 +116,6 @@ public class ContactFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Contact contact);
     }
 }

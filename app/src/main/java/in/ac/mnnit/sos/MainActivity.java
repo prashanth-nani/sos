@@ -123,15 +123,6 @@ public class MainActivity extends AppCompatActivity
                 LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getApplicationContext());
                 localDatabaseAdapter.insertEmergencyContact(eContact, econtactPhones);
 
-                List<Contact> contacts = localDatabaseAdapter.getAllEmergencyContacts();
-                for (Contact singleContact: contacts){
-                    Log.e("TAG", singleContact.getName());
-                    for(Phone phone: singleContact.getPhones()){
-                        Log.e("TAG", phone.getNumber()+" "+phone.getType());
-                    }
-                }
-
-//                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -238,14 +229,15 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
-    }
 
     public void onClickDanger(View v){
         Snackbar.make(findViewById(android.R.id.content), "To be implemented after module implementation", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Contact contact) {
+
     }
 
     class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
