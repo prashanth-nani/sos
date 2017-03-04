@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,11 @@ public class LocalDatabaseAdapter {
         insertEmergencyContact(eContact, econtactPhone, null, null);
     }
 
-    public long insertEmergencyContact(EmergencyContact eContact, List<EcontactPhone> econtactPhone, List<EcontactEmail> econtactEmail, EcontactAddress[] econtactAddress){
+    public void insertEmergencyContact(EmergencyContact eContact, List<EcontactPhone> econtactPhone, List<EcontactEmail> econtactEmail){
+        insertEmergencyContact(eContact, econtactPhone, econtactEmail, null);
+    }
+
+    public long insertEmergencyContact(EmergencyContact eContact, List<EcontactPhone> econtactPhone, List<EcontactEmail> econtactEmail, List<EcontactAddress> econtactAddress){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.ECONTACT_NAME, eContact.getName());
         contentValues.put(DatabaseHelper.ECONTACT_PHOTO, eContact.getPhotoBytes());

@@ -1,6 +1,8 @@
 package in.ac.mnnit.sos;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +12,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,18 +25,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.database.entity.EcontactAddress;
+import in.ac.mnnit.sos.database.entity.EcontactEmail;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
+import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
 import in.ac.mnnit.sos.services.LogoutUser;
@@ -51,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2;
     private Uri uriContact;
 
     @Override
@@ -92,6 +102,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onClickSelectContact() {
+        int contactPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        if(contactPermissionCheck == PackageManager.PERMISSION_GRANTED){
+            pickContacts();
+        }
+        else{
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
+                Toast.makeText(getApplicationContext(), "Contacts access permission is required to pick contacts", Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                pickContacts();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Contacts access permission is required to pick contacts", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void pickContacts(){
         Intent contactsIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(contactsIntent, REQUEST_CODE_PICK_CONTACTS);
     }
@@ -114,12 +154,21 @@ public class MainActivity extends AppCompatActivity
                     eContact.setPhotoBytes(contact.getHighResPhoto());
 
                 List<EcontactPhone> econtactPhones = new ArrayList<>();
+                List<EcontactEmail> econtactEmails = new ArrayList<>();
+                List<EcontactAddress> econtactAddresses = new ArrayList<>();
+
                 for(Phone phone: contact.getPhones()){
                     econtactPhones.add(new EcontactPhone(phone.getNumber(), phone.getType()));
                 }
+                for(Email email: contact.getEmails()){
+                    econtactEmails.add(new EcontactEmail(email.getEmailID(), email.getType()));
+                }
+                for(Address address: contact.getAddresses()){
+                    econtactAddresses.add(new EcontactAddress(address.getAddress(), address.getType()));
+                }
 
                 LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getApplicationContext());
-                localDatabaseAdapter.insertEmergencyContact(eContact, econtactPhones);
+                localDatabaseAdapter.insertEmergencyContact(eContact, econtactPhones, econtactEmails, econtactAddresses);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -240,8 +289,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onContactDelete(Contact contact, int position){
-        if(new LocalDatabaseAdapter(this).deleteContactByID(contact.getId()))
+        if(new LocalDatabaseAdapter(this).deleteContactByID(contact.getId())) {
             LocalDatabaseAdapter.contactsViewAdapter.onContactDelete(position);
+            Toast.makeText(this, "Removed "+contact.getName()+" from emergency contacts", Toast.LENGTH_SHORT).show();
+        }
     }
 
     class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
