@@ -53,9 +53,11 @@ public class MyContactRecyclerViewAdapter
             holder.mContentView.setText(number);
 
         byte[] photo = contact.getHighResPhoto();
+        Utils utils = new Utils();
         if(photo != null){
-            Utils utils = new Utils();
             holder.mContactImageView.setImageBitmap(utils.getBitmapFromBytes(photo));
+        } else {
+            holder.mContactImageView.setImageResource(R.drawable.ic_launcher_sos_orange_high_res);
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
