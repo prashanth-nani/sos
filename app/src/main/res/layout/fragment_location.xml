@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="in.ac.mnnit.sos.fragments.LocationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Your current location and distance from nearest contact is shown here in maps" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

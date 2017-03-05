@@ -15,6 +15,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="google_maps_api_key">AIzaSyDRGIvbZCZm-5GmwqzbbazYSSyMrCP7qbE</string>
     <string name="title_activity_home">SOS</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
