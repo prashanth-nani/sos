@@ -56,10 +56,12 @@ public class MainActivity extends AppCompatActivity
         ContactFragment.OnListFragmentInteractionListener,
         LocationFragment.OnFragmentInteractionListener {
 
-    View bottomNavigationMenuItem;
-    BottomNavigationView bottomNavigationView;
-    FragmentManager fragmentManager;
-    FragmentTransaction transaction;
+    private View bottomNavigationMenuItem;
+    private BottomNavigationView bottomNavigationView;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+    private FloatingActionButton fab;
+
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
@@ -73,13 +75,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickSelectContact();
-            }
-        });
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -268,6 +265,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showEmergencyContacts(){
+        fab.setImageResource(R.drawable.ic_person_add_black_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickSelectContact();
+            }
+        });
+        fab.setVisibility(View.VISIBLE);
         ContactFragment contactFragment = new ContactFragment();
         transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
@@ -276,6 +281,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showHome(){
+        fab.setVisibility(View.GONE);
         HomeFragment homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
@@ -284,6 +290,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showLocation(){
+        fab.setImageResource(R.drawable.ic_my_location);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                pointMyLocation();
+                Snackbar.make(findViewById(android.R.id.content), "Takes to your location", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        fab.setVisibility(View.VISIBLE);
         LocationFragment locationFragment = new LocationFragment();
         transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);

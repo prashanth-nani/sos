@@ -96,7 +96,9 @@ public class LocalDatabaseAdapter {
                 db.execSQL(insertAddressQuery);
             }
         }
-        contactsViewAdapter.onContactAdd(getAllEmergencyContacts());
+        if(contactsViewAdapter != null)
+            contactsViewAdapter.onContactAdd(getAllEmergencyContacts());
+
         return CONTACT_ID;
     }
 
