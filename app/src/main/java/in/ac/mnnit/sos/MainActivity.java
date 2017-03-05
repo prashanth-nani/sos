@@ -1,12 +1,14 @@
 package in.ac.mnnit.sos;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -39,6 +41,7 @@ import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
+import in.ac.mnnit.sos.fragments.PermissionDialogFragment;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
@@ -108,13 +111,30 @@ public class MainActivity extends AppCompatActivity
         }
         else{
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                Toast.makeText(getApplicationContext(), "Contacts access permission is required to pick contacts", Toast.LENGTH_SHORT).show();
+                PermissionDialogFragment permissionDialogFragment = new PermissionDialogFragment();
+                permissionDialogFragment.show(getFragmentManager(), "PermissionDialog");
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             }
         }
+    }
+
+    public void showPermissionRequiredSnackbar(){
+        Snackbar.make(findViewById(android.R.id.content), "Permission is required to pick contacts", Snackbar.LENGTH_SHORT)
+                .setAction("Grant", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openAppSettings();
+                    }
+                }).show();
+    }
+
+    public void openAppSettings(){
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+        startActivity(intent);
     }
 
     @Override
@@ -124,7 +144,7 @@ public class MainActivity extends AppCompatActivity
                 pickContacts();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Contacts access permission is required to pick contacts", Toast.LENGTH_SHORT).show();
+                showPermissionRequiredSnackbar();
             }
         }else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -291,7 +311,7 @@ public class MainActivity extends AppCompatActivity
     public void onContactDelete(Contact contact, int position){
         if(new LocalDatabaseAdapter(this).deleteContactByID(contact.getId())) {
             LocalDatabaseAdapter.contactsViewAdapter.onContactDelete(position);
-            Toast.makeText(this, "Removed "+contact.getName()+" from emergency contacts", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Removed "+contact.getName(), Toast.LENGTH_SHORT).show();
         }
     }
 
