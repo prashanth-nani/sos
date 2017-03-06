@@ -359,10 +359,6 @@ public class MainActivity extends AppCompatActivity
         internetDialog.show();
     }
 
-    public void onInternetConnected(){
-        LocationFragment locationFragment = (LocationFragment) fragmentManager.findFragmentByTag("locationFragment");
-        locationFragment.onInternetConnection();
-    }
 
     @Override
     public void onPositiveResponse(int dialogID) {

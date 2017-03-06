@@ -30,12 +30,9 @@ public class InternetHelper extends AsyncTask<Context, Void, Boolean> {
 
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        if(aBoolean){
-            ((MainActivity) context).onInternetConnected();
-        }
-        else {
+    protected void onPostExecute(Boolean connected) {
+        super.onPostExecute(connected);
+        if(!connected) {
             ((MainActivity) context).showInternetNotConnectedDialog();
         }
     }
