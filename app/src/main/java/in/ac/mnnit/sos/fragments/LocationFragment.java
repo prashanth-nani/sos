@@ -21,11 +21,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
+import in.ac.mnnit.sos.services.InternetHelper;
 import in.ac.mnnit.sos.services.LocationService;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
@@ -72,18 +74,11 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         if(utils.isNetworkAvailable(getActivity())){
             Log.e("TAG", "Yo!! Connected to network");
             NETWORK_CONNECTED = true;
-            if(utils.isInternetAvailable()){
-                Log.e("TAG", "Yessssss");
-                INTERNET_CONNECTED = true;
-                LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
-                contacts = localDatabaseAdapter.getAllEmergencyContacts();
-            }
-            else {
-                Log.e("TAG", "No internet!!");
-            }
+            InternetHelper internetHelper = new InternetHelper(getActivity());
+            internetHelper.execute();
         }
         else{
-
+            ((MainActivity) getActivity()).showNetworkNotConnectedDialog();
         }
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
@@ -91,14 +86,21 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 //        }
     }
 
+    public void onInternetConnection(){
+        Log.e("TAG", "Yessssss");
+        INTERNET_CONNECTED = true;
+        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
+        contacts = localDatabaseAdapter.getAllEmergencyContacts();
+        mapFragment.getMapAsync(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
-        if (INTERNET_CONNECTED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
         }
         return view;
     }
@@ -131,14 +133,16 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         LocationService locationService = new LocationService(getActivity());
         LatLng latLng = null;
 
-        for(Contact contact: contacts){
-            List<Address> addresses = contact.getAddresses();
-            for(Address address: addresses){
-                latLng = locationService.getLatLngFromAddress(address.getAddress());
-                map.addMarker(new MarkerOptions().position(latLng).title(contact.getName())).showInfoWindow();
+        if(contacts != null) {
+            for (Contact contact : contacts) {
+                List<Address> addresses = contact.getAddresses();
+                for (Address address : addresses) {
+                    latLng = locationService.getLatLngFromAddress(address.getAddress());
+                    map.addMarker(new MarkerOptions().position(latLng).title(contact.getName()));
+                }
             }
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         }
-        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     @Override

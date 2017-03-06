@@ -56,7 +56,14 @@ public class MainActivity extends AppCompatActivity
         LocationFragment.OnFragmentInteractionListener,
         DialogFragmentHelper.OnDialogResponseListener {
 
-    private View bottomNavigationMenuItem;
+    private static final int NETWORK_DIALOG_ID = 2;
+    private static final String NETWORK_TITLE = "Network not available";
+    private static final String NETWORK_EXPLANATION = "Please turn on your Wifi or Data connection to proceed";
+    private static final int INTERNET_DIALOG_ID = 3;
+    private static final String INTERNET_TITLE = "No internet connection";
+    private static final String INTERNET_EXPLANATION = "Please check your internet connection";
+    private View bottomNavigationMenuHome;
+    private View bottomNavigationMenuLocation;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -65,11 +72,13 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
+    private static final int REQUEST_CODE_SETTINGS = 2;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2;
     private static final int PERMISSION_DIALOG_ID = 1;
     private static final String CONTACT_PERMISSION_TITLE = "Grant read contacts permission?";
     private static final String CONTACT_PERMISSION_EXPLANATION = "Permission to read contacts is needed to pick emergency contacts from your phone book.";
     private Uri uriContact;
+    DialogFragmentHelper internetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +99,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        bottomNavigationMenuItem = findViewById(R.id.action_home);
-        bottomNavigationMenuItem.performClick();
+        bottomNavigationMenuHome = findViewById(R.id.action_home);
+        bottomNavigationMenuLocation = findViewById(R.id.action_locate);
+
+        bottomNavigationMenuHome.performClick();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
@@ -194,6 +205,8 @@ public class MainActivity extends AppCompatActivity
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(requestCode == REQUEST_CODE_SETTINGS){
+            bottomNavigationMenuLocation.performClick();
         }
     }
 
@@ -334,10 +347,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void showNetworkNotConnectedDialog(){
+        DialogFragmentHelper dialogFragmentHelper =
+                new DialogFragmentHelper(NETWORK_DIALOG_ID, NETWORK_TITLE, NETWORK_EXPLANATION, "Cancel", "Go to settings", this, getFragmentManager());
+        dialogFragmentHelper.show();
+    }
+
+    public void showInternetNotConnectedDialog(){
+        internetDialog =
+                new DialogFragmentHelper(INTERNET_DIALOG_ID, INTERNET_TITLE, INTERNET_EXPLANATION, "Cancel", "Go to settings", this, getFragmentManager());
+        internetDialog.show();
+    }
+
+    public void onInternetConnected(){
+        LocationFragment locationFragment = (LocationFragment) fragmentManager.findFragmentByTag("locationFragment");
+        locationFragment.onInternetConnection();
+    }
+
     @Override
     public void onPositiveResponse(int dialogID) {
         if(dialogID == PERMISSION_DIALOG_ID){
             openAppSettings();
+        } else if (dialogID == NETWORK_DIALOG_ID || dialogID == INTERNET_DIALOG_ID){
+            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), REQUEST_CODE_SETTINGS);
         }
     }
 
@@ -345,11 +377,12 @@ public class MainActivity extends AppCompatActivity
     public void onNegativeResponse(int dialogID) {
         if(dialogID == PERMISSION_DIALOG_ID){
             showPermissionRequiredSnackbar();
+        } else if (dialogID == NETWORK_DIALOG_ID || dialogID == INTERNET_DIALOG_ID){
+            bottomNavigationMenuHome.performClick();
         }
     }
 
-    class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
-
+    private class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){

@@ -3,16 +3,9 @@ package in.ac.mnnit.sos.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.app.FragmentManager;
-import android.view.View;
-import android.widget.Toast;
-
-import in.ac.mnnit.sos.MainActivity;
-import in.ac.mnnit.sos.R;
 
 /**
  * Created by prashanth on 5/3/17.
@@ -27,6 +20,7 @@ public class DialogFragmentHelper {
     private static String negativeText;
     private static OnDialogResponseListener onDialogResponseListener;
     private FragmentManager fragmentManager;
+    CustomDialog customDialogFragment;
 
     public DialogFragmentHelper(int dialogID, String dialogTitle, String dialogMessage, String negativeText, String positiveText, OnDialogResponseListener listener, FragmentManager fragmentManager) {
         DialogFragmentHelper.dialogID = dialogID;
@@ -39,8 +33,13 @@ public class DialogFragmentHelper {
     }
 
     public void show(){
-        CustomDialog customDialogFragment = new CustomDialog();
+        customDialogFragment = new CustomDialog();
+        customDialogFragment.setCancelable(false);
         customDialogFragment.show(fragmentManager, "dialog"+dialogID);
+    }
+
+    public void dismiss(){
+        customDialogFragment.dismiss();
     }
 
     public static class CustomDialog extends DialogFragment{
