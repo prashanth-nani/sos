@@ -1,13 +1,17 @@
 package in.ac.mnnit.sos.extras;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import in.ac.mnnit.sos.models.GeoPoint;
 
@@ -79,5 +83,24 @@ public class Utils {
     public boolean isValidEmail(String email){
         //Implement this method. Return false if invalid
         return true;
+    }
+
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public boolean isInternetAvailable() {
+        try {
+//            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
+//            return !ipAddr.equals("");
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec (command).waitFor() == 0);
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

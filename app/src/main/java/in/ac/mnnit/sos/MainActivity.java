@@ -40,7 +40,7 @@ import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
-import in.ac.mnnit.sos.fragments.PermissionDialogFragment;
+import in.ac.mnnit.sos.fragments.DialogFragmentHelper;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
         ContactFragment.OnListFragmentInteractionListener,
-        LocationFragment.OnFragmentInteractionListener {
+        LocationFragment.OnFragmentInteractionListener,
+        DialogFragmentHelper.OnDialogResponseListener {
 
     private View bottomNavigationMenuItem;
     private BottomNavigationView bottomNavigationView;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2;
+    private static final int PERMISSION_DIALOG_ID = 1;
+    private static final String CONTACT_PERMISSION_TITLE = "Grant read contacts permission?";
+    private static final String CONTACT_PERMISSION_EXPLANATION = "Permission to read contacts is needed to pick emergency contacts from your phone book.";
     private Uri uriContact;
 
     @Override
@@ -107,8 +111,9 @@ public class MainActivity extends AppCompatActivity
         }
         else{
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                PermissionDialogFragment permissionDialogFragment = new PermissionDialogFragment();
-                permissionDialogFragment.show(getFragmentManager(), "PermissionDialog");
+                DialogFragmentHelper dialogFragmentHelper =
+                        new DialogFragmentHelper(PERMISSION_DIALOG_ID, CONTACT_PERMISSION_TITLE, CONTACT_PERMISSION_EXPLANATION, "Cancel", "Ok", this, getFragmentManager());
+                dialogFragmentHelper.show();
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_CONTACTS},
@@ -326,6 +331,20 @@ public class MainActivity extends AppCompatActivity
         if(new LocalDatabaseAdapter(this).deleteContactByID(contact.getId())) {
             LocalDatabaseAdapter.contactsViewAdapter.onContactDelete(position);
             Toast.makeText(this, "Removed "+contact.getName(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onPositiveResponse(int dialogID) {
+        if(dialogID == PERMISSION_DIALOG_ID){
+            openAppSettings();
+        }
+    }
+
+    @Override
+    public void onNegativeResponse(int dialogID) {
+        if(dialogID == PERMISSION_DIALOG_ID){
+            showPermissionRequiredSnackbar();
         }
     }
 

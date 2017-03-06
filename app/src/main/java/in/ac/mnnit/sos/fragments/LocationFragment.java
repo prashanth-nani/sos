@@ -1,10 +1,12 @@
 package in.ac.mnnit.sos.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.services.LocationService;
@@ -37,6 +40,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private MapFragment mapFragment;
     private OnFragmentInteractionListener mListener;
     private List<Contact> contacts;
+    private boolean NETWORK_CONNECTED = false;
+    private boolean INTERNET_CONNECTED = false;
 
     public LocationFragment() {
         // Required empty public constructor
@@ -63,8 +68,23 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
-        contacts = localDatabaseAdapter.getAllEmergencyContacts();
+        Utils utils = new Utils();
+        if(utils.isNetworkAvailable(getActivity())){
+            Log.e("TAG", "Yo!! Connected to network");
+            NETWORK_CONNECTED = true;
+            if(utils.isInternetAvailable()){
+                Log.e("TAG", "Yessssss");
+                INTERNET_CONNECTED = true;
+                LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
+                contacts = localDatabaseAdapter.getAllEmergencyContacts();
+            }
+            else {
+                Log.e("TAG", "No internet!!");
+            }
+        }
+        else{
+
+        }
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -76,7 +96,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (INTERNET_CONNECTED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }
