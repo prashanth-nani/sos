@@ -14,8 +14,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationHandler());
 
-        fragmentManager = getSupportFragmentManager();
+        fragmentManager = getFragmentManager();
 
         HomeFragment homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
@@ -264,6 +264,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showEmergencyContacts(){
+        ContactFragment contactFragment = new ContactFragment();
+        transaction = fragmentManager.beginTransaction();
+//        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        transaction.replace(R.id.content_main, contactFragment, "contactFragment");
+        transaction.commit();
         fab.setImageResource(R.drawable.ic_person_add_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,23 +277,23 @@ public class MainActivity extends AppCompatActivity
             }
         });
         fab.setVisibility(View.VISIBLE);
-        ContactFragment contactFragment = new ContactFragment();
-        transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        transaction.replace(R.id.content_main, contactFragment, "contactFragment");
-        transaction.commit();
     }
 
     public void showHome(){
         fab.setVisibility(View.GONE);
         HomeFragment homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+//        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, homeFragment, "homeFragment");
         transaction.commit();
     }
 
     public void showLocation(){
+        LocationFragment locationFragment = new LocationFragment();
+        transaction = fragmentManager.beginTransaction();
+//        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        transaction.replace(R.id.content_main, locationFragment, "locationFragment");
+        transaction.commit();
         fab.setImageResource(R.drawable.ic_my_location);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,11 +303,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
         fab.setVisibility(View.VISIBLE);
-        LocationFragment locationFragment = new LocationFragment();
-        transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        transaction.replace(R.id.content_main, locationFragment, "locationFragment");
-        transaction.commit();
     }
 
     @Override
