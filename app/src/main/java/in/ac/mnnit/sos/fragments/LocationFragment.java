@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.List;
 
 import in.ac.mnnit.sos.R;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.models.Address;
+import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.services.LocationService;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
@@ -33,6 +36,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private MapFragment mapFragment;
     private OnFragmentInteractionListener mListener;
+    private List<Contact> contacts;
 
     public LocationFragment() {
         // Required empty public constructor
@@ -59,8 +63,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-//
+        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
+        contacts = localDatabaseAdapter.getAllEmergencyContacts();
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -105,8 +109,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     public void setupMap() throws IOException {
         LocationService locationService = new LocationService(getActivity());
-        LatLng latLng = locationService.getLatLngFromAddress("Hyderabad");
-        map.addMarker(new MarkerOptions().position(latLng).title("Hyderabad"));
+        LatLng latLng = null;
+
+        for(Contact contact: contacts){
+            List<Address> addresses = contact.getAddresses();
+            for(Address address: addresses){
+                latLng = locationService.getLatLngFromAddress(address.getAddress());
+                map.addMarker(new MarkerOptions().position(latLng).title(contact.getName())).showInfoWindow();
+            }
+        }
         map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
