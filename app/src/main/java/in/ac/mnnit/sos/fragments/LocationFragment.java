@@ -2,6 +2,7 @@ package in.ac.mnnit.sos.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -137,6 +140,12 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
             }
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         }
+        LatLng temp = locationService.getLatLngFromAddress("Shimla");
+        Circle circle = map.addCircle(new CircleOptions()
+                .center(new LatLng(temp.latitude, temp.longitude))
+                .radius(10000)
+                .strokeColor(Color.argb(0, 0, 0, 1))
+                .fillColor(Color.BLUE));
     }
 
     @Override
