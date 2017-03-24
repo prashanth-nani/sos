@@ -30,6 +30,7 @@ import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.services.InternetHelper;
+import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
@@ -138,14 +139,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                     map.addMarker(new MarkerOptions().position(latLng).title(contact.getName()));
                 }
             }
-            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         }
-        LatLng temp = locationService.getLatLngFromAddress("Shimla");
+//        LatLng temp = locationService.getLatLngFromAddress("Allahabad");
         Circle circle = map.addCircle(new CircleOptions()
-                .center(new LatLng(temp.latitude, temp.longitude))
+                .center(LocationDetailsHolder.LAST_KNOWN_LOCATION)
                 .radius(10000)
                 .strokeColor(Color.argb(0, 0, 0, 1))
                 .fillColor(Color.BLUE));
+        map.moveCamera(CameraUpdateFactory.newLatLng(LocationDetailsHolder.LAST_KNOWN_LOCATION));
+        map.animateCamera(CameraUpdateFactory.zoomBy(7));
     }
 
     @Override

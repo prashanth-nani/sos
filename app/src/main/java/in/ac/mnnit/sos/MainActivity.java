@@ -46,7 +46,10 @@ import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
+import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.LogoutUser;
+import in.ac.mnnit.sos.services.MessageService;
+import in.ac.mnnit.sos.services.MyLocationListener;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -113,6 +116,9 @@ public class MainActivity extends AppCompatActivity
         transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.content_main, homeFragment, "homeFragment");
         transaction.commit();
+
+        LocationService locationService = new LocationService(this);
+        locationService.trackUserLocation();
     }
 
     private void onClickSelectContact() {
@@ -146,6 +152,11 @@ public class MainActivity extends AppCompatActivity
     public void openAppSettings(){
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+        startActivity(intent);
+    }
+
+    public void openSettings(){
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(intent);
     }
 
@@ -229,6 +240,16 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 2 * 1000);
         }
+    }
+
+    public void showGPSOffSnackbar(){
+        Snackbar.make(findViewById(android.R.id.content), "Turn your GPS ON to send location updates when your are in danger", Snackbar.LENGTH_LONG)
+                .setAction("TURN ON", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openSettings();
+                    }
+                }).show();
     }
 
     @Override
@@ -330,7 +351,11 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onClickDanger(View v){
-        Snackbar.make(findViewById(android.R.id.content), "To be implemented after module implementation", Snackbar.LENGTH_SHORT)
+        MessageService messageService = new MessageService();
+        ArrayList<String> phones = new ArrayList<>();
+        phones.add("9935361164");
+        messageService.sendSMS(phones, "Please help!!");
+        Snackbar.make(findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
