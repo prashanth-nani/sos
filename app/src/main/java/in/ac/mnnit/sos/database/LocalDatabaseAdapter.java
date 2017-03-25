@@ -215,6 +215,18 @@ public class LocalDatabaseAdapter {
         return addresses;
     }
 
+    public ArrayList<String> getAllPhones(){
+        Cursor phoneCursor = db.query(DatabaseHelper.PHONE_TABLE, new String[]{DatabaseHelper.PHONE}, null, null, null, null, null);
+
+        int PHONE_INDEX = phoneCursor.getColumnIndex(DatabaseHelper.PHONE);
+
+        ArrayList<String> phones = new ArrayList<>();
+        while (phoneCursor.moveToNext()){
+            phones.add(phoneCursor.getString(PHONE_INDEX));
+        }
+        return phones;
+    }
+
     public boolean deleteContactByID(int CONTACT_ID){
         boolean result = db.delete(DatabaseHelper.EMERGENCY_CONTACT_TABLE, DatabaseHelper.ECONTACT_ID+"=?", new String[]{String.valueOf(CONTACT_ID)}) > 0;
         return result;
