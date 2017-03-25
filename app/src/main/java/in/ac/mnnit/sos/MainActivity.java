@@ -352,9 +352,9 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickDanger(View v){
         MessageService messageService = new MessageService();
-        ArrayList<String> phones = new ArrayList<>();
-        phones.add("9935361164");
-        messageService.sendSMS(phones, "Please help!!");
+        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(this);
+        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
+        messageService.sendSMS(phones, "Please help!! I'm in danger.");
         Snackbar.make(findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
