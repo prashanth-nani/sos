@@ -1,6 +1,9 @@
 package in.ac.mnnit.sos;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,8 +18,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -41,19 +43,19 @@ import in.ac.mnnit.sos.database.entity.EcontactEmail;
 import in.ac.mnnit.sos.database.entity.EcontactPhone;
 import in.ac.mnnit.sos.database.entity.EmergencyContact;
 import in.ac.mnnit.sos.fragments.ContactFragment;
+import in.ac.mnnit.sos.fragments.DialogFragmentHelper;
 import in.ac.mnnit.sos.fragments.HomeFragment;
 import in.ac.mnnit.sos.fragments.LocationFragment;
-import in.ac.mnnit.sos.fragments.DialogFragmentHelper;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
+import in.ac.mnnit.sos.services.GoogleApiClientImpl;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.LogoutUser;
 import in.ac.mnnit.sos.services.MessageService;
-import in.ac.mnnit.sos.services.MyLocationListener;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -76,10 +78,9 @@ public class MainActivity extends AppCompatActivity
     private FragmentTransaction transaction;
     private FloatingActionButton fab;
 
-
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final int REQUEST_CODE_SETTINGS = 2;
+    public static final int REQUEST_LOCATION = 3;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2;
     private static final int PERMISSION_DIALOG_ID = 1;
     private static final String CONTACT_PERMISSION_TITLE = "Grant read contacts permission?";
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK){
-            Log.d(TAG, "Response: " + data.toString());
+            Log.d("TAG", "Response: " + data.toString());
             uriContact = data.getData();
 
             ContactServiceHelper contactServiceHelper = new ContactServiceHelper(getApplicationContext(), uriContact);
@@ -228,6 +229,25 @@ public class MainActivity extends AppCompatActivity
             }
         }else if(requestCode == REQUEST_CODE_SETTINGS){
             bottomNavigationMenuLocation.performClick();
+        }else if(requestCode == REQUEST_LOCATION){
+            switch (resultCode)
+            {
+                case Activity.RESULT_OK:
+                {
+                    showLocation();
+                    break;
+                }
+                case Activity.RESULT_CANCELED:
+                {
+                    Toast.makeText(this, "Location not enabled", Toast.LENGTH_LONG).show();
+                    bottomNavigationMenuHome.performClick();
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
         }
     }
 
@@ -337,9 +357,15 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    public void onClickLocation(){
+        GoogleApiClientImpl googleApiClient = new GoogleApiClientImpl(this);
+        googleApiClient.start();
+    }
+
     public void showLocation(){
         final LocationFragment locationFragment = new LocationFragment();
         transaction = fragmentManager.beginTransaction();
+
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, locationFragment, "locationFragment");
         transaction.commit();
@@ -347,13 +373,12 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pointMyLocation();
                 locationFragment.goToCurrentLocation();
-//                Snackbar.make(findViewById(android.R.id.content), "Takes to your location", Snackbar.LENGTH_SHORT).show();
             }
         });
         fab.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -435,7 +460,7 @@ public class MainActivity extends AppCompatActivity
                     showHome();
                     break;
                 case R.id.action_locate:
-                    showLocation();
+                    onClickLocation();
                     break;
                 default:
                     return false;

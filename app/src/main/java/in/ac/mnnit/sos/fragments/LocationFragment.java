@@ -1,13 +1,17 @@
 package in.ac.mnnit.sos.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -15,7 +19,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -55,8 +70,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private List<Contact> contacts;
     private TextView gettingLocationText;
     private Location currentLocation;
-//    private boolean NETWORK_CONNECTED = false;
-//    private boolean INTERNET_CONNECTED = false;
+    private int circleColor;
+
 
     public LocationFragment() {
         // Required empty public constructor
@@ -83,10 +98,9 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Utils utils = new Utils();
         if(utils.isNetworkAvailable(getActivity())){
-//            Log.e("TAG", "Yo!! Connected to network");
-//            NETWORK_CONNECTED = true;
             InternetHelper internetHelper = new InternetHelper(getActivity());
             internetHelper.execute();
             LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
@@ -95,28 +109,24 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         else{
             ((MainActivity) getActivity()).showNetworkNotConnectedDialog();
         }
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         gettingLocationText = (TextView) getActivity().findViewById(R.id.locationRequestText);
+        circleColor = ContextCompat.getColor(getActivity(), R.color.circleColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+            mapFragment.getView().setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-            mapFragment.getView().setVisibility(View.INVISIBLE);
-        }
         return view;
     }
 
@@ -178,11 +188,12 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                         .center(myLocation)
                         .radius(10000)
                         .strokeColor(Color.argb(0, 0, 0, 1))
-                        .fillColor(ContextCompat.getColor(getActivity(), R.color.circleColor)));
+                        .fillColor(circleColor));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 11.5));
 
                 gettingLocationText.setVisibility(View.INVISIBLE);
-                mapFragment.getView().setVisibility(View.VISIBLE);
+                if(mapFragment.getView() != null)
+                    mapFragment.getView().setVisibility(View.VISIBLE);
             }
         };
         MyLocation myLocation = new MyLocation();
