@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,6 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.database.entity.EcontactAddress;
@@ -50,6 +53,7 @@ import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
+import in.ac.mnnit.sos.services.AlarmService;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
 import in.ac.mnnit.sos.services.GoogleApiClientImpl;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private FloatingActionButton fab;
+    private Button dangerButton;
 
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final int REQUEST_CODE_SETTINGS = 2;
@@ -91,6 +96,8 @@ public class MainActivity extends AppCompatActivity
     public static Context APP_CONTEXT;
     DialogFragmentHelper internetDialog;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         APP_CONTEXT = getApplicationContext();
         MAIN_ACTIVITY_CONTEXT = getBaseContext();
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -112,6 +120,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        dangerButton = (Button) findViewById(R.id.dangerButton);
 
         bottomNavigationMenuHome = findViewById(R.id.action_home);
         bottomNavigationMenuLocation = findViewById(R.id.action_locate);
@@ -130,6 +140,8 @@ public class MainActivity extends AppCompatActivity
 
         LocationService locationService = new LocationService(this);
         locationService.trackUserLocation();
+
+
     }
 
     private void onClickSelectContact() {
@@ -313,17 +325,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_account) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_activity) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_invite) {
 
         }
 
@@ -386,24 +394,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void onClickDanger(View v){
-        MessageService messageService = new MessageService();
-        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(this);
-        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
-        String locationBaseLink = "http://maps.google.com/maps?q=";
-        String locationMapLink;
-        String messageContent =  "Please help!! I'm in danger.";
-        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
-        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
-        if(bestKnownLoc != null)
-        {
-            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude)+","+String.valueOf(bestKnownLoc.longitude));
-            messageContent = "Please help!! I'm in danger. I'm at "+locationMapLink;
-        }
-        messageService.sendSMS(phones, messageContent);
-        Snackbar.make(findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
-    }
+
+
 
     @Override
     public void onListFragmentInteraction(Contact contact) {
