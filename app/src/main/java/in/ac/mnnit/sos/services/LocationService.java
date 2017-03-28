@@ -34,10 +34,24 @@ public class LocationService {
         geocoder = new Geocoder(context, Locale.getDefault());
     }
 
+    public String getAddressFromLatLng(LatLng latLng) throws IOException {
+        StringBuilder namedAddress = new StringBuilder("");
+        List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+        Address address = addresses.get(0);
+        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            namedAddress.append(address.getAddressLine(i)).append(", ");
+        }
+        return namedAddress.toString();
+    }
+
     public LatLng getLatLngFromAddress(String locationName) throws IOException {
         List<Address> addresses = geocoder.getFromLocationName(locationName, 1);
-        Address address = addresses.get(0);
-        return new LatLng(address.getLatitude(), address.getLongitude());
+        Address address;
+        if(addresses.size() > 0){
+            address = addresses.get(0);
+            return new LatLng(address.getLatitude(), address.getLongitude());
+        }
+        return null;
     }
 
     public void trackUserLocation() {
@@ -61,8 +75,9 @@ public class LocationService {
             lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
-        if(lastKnownLocation != null)
-            LocationDetailsHolder.LAST_KNOWN_LOCATION = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-
+        if(lastKnownLocation != null){
+            LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+            locationDetailsHolder.updateLastKnownLocation(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+        }
     }
 }

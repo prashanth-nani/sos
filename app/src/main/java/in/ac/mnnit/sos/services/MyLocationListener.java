@@ -16,7 +16,8 @@ public class MyLocationListener implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.e("TAG", "Location is: ("+location.getLatitude()+", "+location.getLongitude()+")");
         LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-        LocationDetailsHolder.points.add(ll);
+        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+        locationDetailsHolder.addPoint(ll);
         LocationDetailsHolder.LATEST_LOCATION = ll;
     }
 

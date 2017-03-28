@@ -2,19 +2,26 @@ package in.ac.mnnit.sos.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,6 +39,7 @@ import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.services.InternetHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
+import in.ac.mnnit.sos.services.MyLocation;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
 //    private static final String ARG_PARAM1 = "param1";
@@ -45,6 +53,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private MapFragment mapFragment;
     private OnFragmentInteractionListener mListener;
     private List<Contact> contacts;
+    private TextView gettingLocationText;
+    private Location currentLocation;
 //    private boolean NETWORK_CONNECTED = false;
 //    private boolean INTERNET_CONNECTED = false;
 
@@ -92,6 +102,12 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        gettingLocationText = (TextView) getActivity().findViewById(R.id.locationRequestText);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
@@ -99,6 +115,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
+            mapFragment.getView().setVisibility(View.INVISIBLE);
         }
         return view;
     }
@@ -130,24 +147,48 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     public void setupMap() throws IOException {
         LocationService locationService = new LocationService(getActivity());
         LatLng latLng = null;
+        Utils utils = new Utils();
+//        Bitmap star = utils.getBitmapFromVectorResource();
+        BitmapDescriptor star = utils.getMarkerIconFromDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars));
+
 
         if(contacts != null) {
             for (Contact contact : contacts) {
                 List<Address> addresses = contact.getAddresses();
                 for (Address address : addresses) {
                     latLng = locationService.getLatLngFromAddress(address.getAddress());
-                    map.addMarker(new MarkerOptions().position(latLng).title(contact.getName()));
+                    if(latLng != null)
+                        map.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title(contact.getName())
+                            .icon(star));
                 }
             }
         }
-//        LatLng temp = locationService.getLatLngFromAddress("Allahabad");
-        Circle circle = map.addCircle(new CircleOptions()
-                .center(LocationDetailsHolder.LAST_KNOWN_LOCATION)
-                .radius(10000)
-                .strokeColor(Color.argb(0, 0, 0, 1))
-                .fillColor(Color.BLUE));
-        map.moveCamera(CameraUpdateFactory.newLatLng(LocationDetailsHolder.LAST_KNOWN_LOCATION));
-        map.animateCamera(CameraUpdateFactory.zoomBy(7));
+////        LatLng temp = locationService.getLatLngFromAddress("Allahabad");
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                currentLocation = location;
+                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                Circle outerCircle = map.addCircle(new CircleOptions()
+                        .center(myLocation)
+                        .radius(10000)
+                        .strokeColor(Color.argb(0, 0, 0, 1))
+                        .fillColor(ContextCompat.getColor(getActivity(), R.color.circleColor)));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 11.5));
+
+                gettingLocationText.setVisibility(View.INVISIBLE);
+                mapFragment.getView().setVisibility(View.VISIBLE);
+            }
+        };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(getActivity(), locationResult);
+    }
+
+    public void goToCurrentLocation(){
+        LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        map.animateCamera(CameraUpdateFactory.newLatLng(myLocation));
     }
 
     @Override

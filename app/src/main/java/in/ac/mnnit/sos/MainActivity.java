@@ -1,6 +1,7 @@
 package in.ac.mnnit.sos;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -28,6 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
+import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.LogoutUser;
 import in.ac.mnnit.sos.services.MessageService;
@@ -81,11 +85,17 @@ public class MainActivity extends AppCompatActivity
     private static final String CONTACT_PERMISSION_TITLE = "Grant read contacts permission?";
     private static final String CONTACT_PERMISSION_EXPLANATION = "Permission to read contacts is needed to pick emergency contacts from your phone book.";
     private Uri uriContact;
+
+    public static Context MAIN_ACTIVITY_CONTEXT;
+    public static Context APP_CONTEXT;
     DialogFragmentHelper internetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        APP_CONTEXT = getApplicationContext();
+        MAIN_ACTIVITY_CONTEXT = getBaseContext();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -328,7 +338,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showLocation(){
-        LocationFragment locationFragment = new LocationFragment();
+        final LocationFragment locationFragment = new LocationFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, locationFragment, "locationFragment");
@@ -338,7 +348,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 //                pointMyLocation();
-                Snackbar.make(findViewById(android.R.id.content), "Takes to your location", Snackbar.LENGTH_SHORT).show();
+                locationFragment.goToCurrentLocation();
+//                Snackbar.make(findViewById(android.R.id.content), "Takes to your location", Snackbar.LENGTH_SHORT).show();
             }
         });
         fab.setVisibility(View.VISIBLE);
@@ -354,7 +365,17 @@ public class MainActivity extends AppCompatActivity
         MessageService messageService = new MessageService();
         LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(this);
         ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
-        messageService.sendSMS(phones, "Please help!! I'm in danger.");
+        String locationBaseLink = "http://maps.google.com/maps?q=";
+        String locationMapLink;
+        String messageContent =  "Please help!! I'm in danger.";
+        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
+        if(bestKnownLoc != null)
+        {
+            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude)+","+String.valueOf(bestKnownLoc.longitude));
+            messageContent = "Please help!! I'm in danger. I'm at "+locationMapLink;
+        }
+        messageService.sendSMS(phones, messageContent);
         Snackbar.make(findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
