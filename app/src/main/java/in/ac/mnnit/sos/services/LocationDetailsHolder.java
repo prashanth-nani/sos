@@ -29,12 +29,12 @@ public class LocationDetailsHolder {
             points = new ArrayList<>();
         }
         points.add(point);
-        updateLatestLocationName();
+//        updateLatestLocationName();
     }
 
     public void updateLastKnownLocation(LatLng lastKnownLocation){
         LAST_KNOWN_LOCATION = lastKnownLocation;
-        updateLastLocationName();
+//        updateLastLocationName();
     }
 
     public void updateLastLocationName(){

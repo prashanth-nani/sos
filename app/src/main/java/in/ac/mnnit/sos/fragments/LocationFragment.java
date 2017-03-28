@@ -165,12 +165,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
-////        LatLng temp = locationService.getLatLngFromAddress("Allahabad");
+
         MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
             @Override
             public void gotLocation(Location location){
                 currentLocation = location;
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                map.addMarker(new MarkerOptions()
+                                .position(myLocation)
+                                .title("Your location"));
                 Circle outerCircle = map.addCircle(new CircleOptions()
                         .center(myLocation)
                         .radius(10000)
@@ -188,7 +191,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     public void goToCurrentLocation(){
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        map.animateCamera(CameraUpdateFactory.newLatLng(myLocation));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float)14));
     }
 
     @Override
