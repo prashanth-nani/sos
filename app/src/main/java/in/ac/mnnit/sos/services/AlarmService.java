@@ -11,7 +11,7 @@ import android.view.View;
  * Created by prashanth on 28/3/17.
  */
 
-public class AlarmService implements View.OnClickListener{
+public class AlarmService{
 
     private Context context;
     private MediaPlayer mediaPlayer;
@@ -32,10 +32,5 @@ public class AlarmService implements View.OnClickListener{
 
     public void stopAlarm(){
         mediaPlayer.stop();
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }
