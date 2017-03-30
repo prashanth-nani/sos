@@ -27,12 +27,14 @@ import in.ac.mnnit.sos.services.AlarmHelper;
 //import in.ac.mnnit.sos.services.FlashHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
+import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button dangerButton;
-//    Button flashButton;
+    Button recordButton;
+    Button stopRecordButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
     private boolean serviceStarted = false;
@@ -69,7 +71,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_home, container, false);
             dangerButton = (Button) view.findViewById(R.id.dangerButton);
-            dangerButton.setOnClickListener(this);
+//            dangerButton.setOnClickListener(this);
+            recordButton = (Button) view.findViewById(R.id.record);
+            stopRecordButton = (Button) view.findViewById(R.id.Stop);
+            recordButton.setOnClickListener(this);
+            stopRecordButton.setOnClickListener(this);
 //            flashButton = (Button) view.findViewById(R.id.flashButton);
 //            flashButton.setOnClickListener(this);
         }
@@ -196,20 +202,39 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
+    public void startRecording(){
+        VoiceRecordHelper voiceRecordHelper = new VoiceRecordHelper(context);
+        voiceRecordHelper.recordAudio();
+    }
+
+    public void stopRecording(){
+
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
     }
 
+    boolean recording = false;
+    VoiceRecordHelper voiceRecordHelper;
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.dangerButton){
             onClickDanger();
         }
-//        else if (v.getId() == R.id.flashButton){
-//            startFlash();
-//        }
+        else if (v.getId() == R.id.record || v.getId() == R.id.Stop)
+        {
+            if(!recording){
+                voiceRecordHelper = new VoiceRecordHelper(context);
+                voiceRecordHelper.recordAudio();
+                recording = true;
+            }else {
+                voiceRecordHelper.stopRecording();
+                recording = false;
+            }
+        }
     }
 
     /**

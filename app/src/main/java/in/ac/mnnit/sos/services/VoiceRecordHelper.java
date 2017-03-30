@@ -2,6 +2,7 @@ package in.ac.mnnit.sos.services;
 
 import android.content.Context;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,11 +23,12 @@ public class VoiceRecordHelper {
         this.context = context;
         Utils utils = new Utils();
         mediaRecorder = new MediaRecorder();
-        String fileName = new SimpleDateFormat("yyyyMMddHHmm'.3gp'").format(new Date());
+        String fileName = new SimpleDateFormat("yyyyMMddHHmm'.3gpp'").format(new Date());
+        Log.d("TAG", utils.getRecordingsDirectory()+"/"+fileName);
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setOutputFile(utils.getRecordingsDirectory(context)+"/"+fileName);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setOutputFile(utils.getRecordingsDirectory()+"/"+fileName);
         try {
             mediaRecorder.prepare();
         } catch (IOException e) {
@@ -40,5 +42,6 @@ public class VoiceRecordHelper {
 
     public void stopRecording(){
         mediaRecorder.stop();
+        mediaRecorder.release();
     }
 }

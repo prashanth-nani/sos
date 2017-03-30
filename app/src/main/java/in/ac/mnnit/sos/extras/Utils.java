@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -128,9 +129,9 @@ public class Utils {
         return false;
     }
 
-    public String getRecordingsDirectory(Context context){
-        File SDCardPath = context.getFilesDir();
-        File recordingsPath = new File(SDCardPath.getAbsolutePath()+"/SOS/Recordings");
+    public String getRecordingsDirectory(){
+        File SDCardPath = Environment.getExternalStorageDirectory();
+        File recordingsPath = new File(SDCardPath.getAbsolutePath()+"/SOSRecordings/");
         if(!recordingsPath.exists()){
             recordingsPath.mkdir();
         }
