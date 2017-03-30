@@ -38,19 +38,18 @@ public class ContactFragment extends Fragment {
         Log.d("TAG", "OnCreateView called");
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_contact_list, container, false);
-
-            // Set the adapter
-            if (view instanceof RecyclerView) {
-                Context context = view.getContext();
-                RecyclerView recyclerView = (RecyclerView) view;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                }
-                LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(context);
-                recyclerView.setAdapter(new MyContactRecyclerViewAdapter(localDatabaseAdapter.getAllEmergencyContacts(), mListener));
+        }
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(context);
+            recyclerView.setAdapter(new MyContactRecyclerViewAdapter(localDatabaseAdapter.getAllEmergencyContacts(), (OnListFragmentInteractionListener) context));
         }
         return view;
     }

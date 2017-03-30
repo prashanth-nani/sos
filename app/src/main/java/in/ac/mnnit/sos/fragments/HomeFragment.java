@@ -1,5 +1,6 @@
 package in.ac.mnnit.sos.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmService;
@@ -34,6 +36,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private boolean serviceStarted = false;
     private boolean serviceInitiated =  false;
     private View view;
+    private Activity activity;
 
     Timer alarmTimer;
     Timer taskTimer;
@@ -72,7 +75,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onClickDanger(){
-        dangerButton.setText("Click to abort within 10s");
+        dangerButton.setText("Click to abort within\r\n10s");
 
         if(!serviceStarted && !serviceInitiated) {
             initializeTimers();
@@ -105,7 +108,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void changeText(){
-        getActivity().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 dangerButton.setText("STOP");
@@ -158,6 +161,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        activity = (MainActivity) context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
