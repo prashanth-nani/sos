@@ -1,9 +1,10 @@
 package in.ac.mnnit.sos.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.TimerTask;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmService;
+//import in.ac.mnnit.sos.services.FlashService;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
 
@@ -26,9 +28,12 @@ import in.ac.mnnit.sos.services.MessageService;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button dangerButton;
+//    Button flashButton;
     private AlarmService alarmService;
+//    private FlashService flashService;
     private boolean serviceStarted = false;
     private boolean serviceInitiated =  false;
+    private View view;
 
     Timer alarmTimer;
     Timer taskTimer;
@@ -45,14 +50,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         alarmService = new AlarmService(getActivity());
+//        flashService = new FlashService(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        dangerButton = (Button) view.findViewById(R.id.dangerButton);
-        dangerButton.setOnClickListener(this);
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_home, container, false);
+            dangerButton = (Button) view.findViewById(R.id.dangerButton);
+            dangerButton.setOnClickListener(this);
+//            flashButton = (Button) view.findViewById(R.id.flashButton);
+//            flashButton.setOnClickListener(this);
+        }
         return view;
     }
 
@@ -62,11 +72,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onClickDanger(){
-        dangerButton.setText("Starts in 5s\nClick to stop");
+        dangerButton.setText("Click to abort within 10s");
 
         if(!serviceStarted && !serviceInitiated) {
             initializeTimers();
-            long interval =  10 * 1000;
+            long interval =  5 * 60 * 1000; //5 Min
             serviceInitiated = true;
             alarmTimer.schedule(new TimerTask() {
                 @Override
@@ -75,7 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     serviceStarted = true;
                     changeText();
                 }
-            }, 5000);
+            }, 10000);
 
 
             taskTimer.scheduleAtFixedRate(new TimerTask() {
@@ -83,7 +93,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 public void run() {
                     kickOffTasks();
                 }
-            }, 5000, interval);
+            }, 20 * 1000, interval);
         }else{
             dangerButton.setText("I am in\r\ndanger");
             stopAlarm();
@@ -134,6 +144,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         alarmService.stopAlarm();
     }
 
+    public void startFlash(){
+//        flashService.startOn();
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -160,10 +173,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public void onClick(View v) {
         if(v.getId() == R.id.dangerButton){
             onClickDanger();
         }
+//        else if (v.getId() == R.id.flashButton){
+//            startFlash();
+//        }
     }
 
     /**

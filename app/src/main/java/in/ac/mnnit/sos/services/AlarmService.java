@@ -1,11 +1,9 @@
 package in.ac.mnnit.sos.services;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.view.View;
 
 /**
  * Created by prashanth on 28/3/17.

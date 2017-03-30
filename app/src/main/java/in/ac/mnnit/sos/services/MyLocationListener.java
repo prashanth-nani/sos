@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class MyLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
-        Log.e("TAG", "Location is: ("+location.getLatitude()+", "+location.getLongitude()+")");
+        //Log.e("TAG", "Location is: ("+location.getLatitude()+", "+location.getLongitude()+")");
         LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
         LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
         locationDetailsHolder.addPoint(ll);

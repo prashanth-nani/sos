@@ -2,6 +2,7 @@ package in.ac.mnnit.sos;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -341,10 +342,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showEmergencyContacts(){
-        ContactFragment contactFragment = new ContactFragment();
+        ContactFragment contactFragment;
+        Fragment fragment = fragmentManager.findFragmentByTag("contactFragment");
+        if(fragment != null && fragment instanceof ContactFragment)
+            contactFragment = (ContactFragment) fragment;
+        else
+            contactFragment = new ContactFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, contactFragment, "contactFragment");
+        transaction.addToBackStack("contactFragment");
         transaction.commit();
         fab.setImageResource(R.drawable.ic_person_add_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -358,10 +365,16 @@ public class MainActivity extends AppCompatActivity
 
     public void showHome(){
         fab.setVisibility(View.GONE);
-        HomeFragment homeFragment = new HomeFragment();
+        HomeFragment homeFragment;
+        Fragment fragment = fragmentManager.findFragmentByTag("homeFragment");
+        if(fragment != null && fragment instanceof HomeFragment)
+            homeFragment = (HomeFragment) fragment;
+        else
+            homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, homeFragment, "homeFragment");
+        transaction.addToBackStack("homeFragment");
         transaction.commit();
     }
 
@@ -371,11 +384,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showLocation(){
-        final LocationFragment locationFragment = new LocationFragment();
+        final LocationFragment locationFragment;
+        Fragment fragment = fragmentManager.findFragmentByTag("locationFragment");
+        if(fragment != null && fragment instanceof LocationFragment)
+            locationFragment = (LocationFragment) fragment;
+        else
+            locationFragment= new LocationFragment();
         transaction = fragmentManager.beginTransaction();
-
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         transaction.replace(R.id.content_main, locationFragment, "locationFragment");
+        transaction.addToBackStack("locationFragment");
         transaction.commit();
         fab.setImageResource(R.drawable.ic_my_location);
         fab.setOnClickListener(new View.OnClickListener() {

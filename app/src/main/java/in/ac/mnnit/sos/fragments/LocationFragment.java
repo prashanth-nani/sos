@@ -71,6 +71,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private TextView gettingLocationText;
     private Location currentLocation;
     private int circleColor;
+    private View view;
 
 
     public LocationFragment() {
@@ -114,19 +115,23 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
+
         gettingLocationText = (TextView) getActivity().findViewById(R.id.locationRequestText);
         circleColor = ContextCompat.getColor(getActivity(), R.color.circleColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-            mapFragment.getView().setVisibility(View.INVISIBLE);
+            if(mapFragment.getView() != null)
+                mapFragment.getView().setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_location, container, false);
+        if(view == null)
+            view = inflater.inflate(R.layout.fragment_location, container, false);
         return view;
     }
 
