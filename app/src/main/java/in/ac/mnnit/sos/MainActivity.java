@@ -32,14 +32,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.database.entity.EcontactAddress;
@@ -54,13 +49,10 @@ import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
-import in.ac.mnnit.sos.services.AlarmService;
 import in.ac.mnnit.sos.services.ContactServiceHelper;
 import in.ac.mnnit.sos.services.GoogleApiClientImpl;
-import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.LogoutUser;
-import in.ac.mnnit.sos.services.MessageService;
 
 public class MainActivity extends AppCompatActivity
         implements

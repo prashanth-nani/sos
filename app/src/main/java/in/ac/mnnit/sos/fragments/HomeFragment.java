@@ -3,6 +3,7 @@ package in.ac.mnnit.sos.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,9 +21,10 @@ import java.util.TimerTask;
 
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
+import in.ac.mnnit.sos.appServices.AlarmService;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
-import in.ac.mnnit.sos.services.AlarmService;
-//import in.ac.mnnit.sos.services.FlashService;
+import in.ac.mnnit.sos.services.AlarmHelper;
+//import in.ac.mnnit.sos.services.FlashHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
 
@@ -31,12 +33,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button dangerButton;
 //    Button flashButton;
-    private AlarmService alarmService;
-//    private FlashService flashService;
+    private AlarmHelper alarmHelper;
+//    private FlashHelper flashService;
     private boolean serviceStarted = false;
     private boolean serviceInitiated =  false;
     private View view;
     private Activity activity;
+    private Intent alarmIntent;
+    private Context context;
 
     Timer alarmTimer;
     Timer taskTimer;
@@ -52,8 +56,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alarmService = new AlarmService(getActivity());
-//        flashService = new FlashService(getActivity());
+        this.context = getActivity();
+        alarmHelper = new AlarmHelper(getActivity());
+        alarmIntent = new Intent(getActivity(), AlarmService.class);
+//        flashService = new FlashHelper(getActivity());
+
     }
 
     @Override
@@ -74,36 +81,49 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         taskTimer = new Timer();
     }
 
+//    public void onClickDanger(){
+//        dangerButton.setText("Click to abort within\r\n10s");
+//        if(!serviceStarted && !serviceInitiated) {
+//            initializeTimers();
+//            long interval =  5 * 60 * 1000; //5 Min
+//            serviceInitiated = true;
+//            alarmTimer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    startAlarm();
+//                    serviceStarted = true;
+//                    changeText();
+//                }
+//            }, 10000);
+//
+//
+//            taskTimer.scheduleAtFixedRate(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    kickOffTasks();
+//                }
+//            }, 20 * 1000, interval);
+//        }else{
+//            dangerButton.setText("I am in\r\ndanger");
+//            stopAlarm();
+//            alarmTimer.cancel();
+//            taskTimer.cancel();
+//            serviceStarted = false;
+//            serviceInitiated = false;
+//        }
+//    }
+
     public void onClickDanger(){
-        dangerButton.setText("Click to abort within\r\n10s");
-
-        if(!serviceStarted && !serviceInitiated) {
-            initializeTimers();
-            long interval =  5 * 60 * 1000; //5 Min
-            serviceInitiated = true;
-            alarmTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    startAlarm();
-                    serviceStarted = true;
-                    changeText();
-                }
-            }, 10000);
-
-
-            taskTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    kickOffTasks();
-                }
-            }, 20 * 1000, interval);
-        }else{
+        if(!serviceStarted)
+        {
+            serviceStarted = true;
+            dangerButton.setText("Stop");
+            context.startService(alarmIntent);
+        }
+        else {
+            context.stopService(alarmIntent);
             dangerButton.setText("I am in\r\ndanger");
-            stopAlarm();
-            alarmTimer.cancel();
-            taskTimer.cancel();
             serviceStarted = false;
-            serviceInitiated = false;
         }
     }
 
@@ -140,11 +160,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void startAlarm(){
-        alarmService.startAlarm();
+        alarmHelper.startAlarm();
     }
 
     public void stopAlarm(){
-        alarmService.stopAlarm();
+        alarmHelper.stopAlarm();
     }
 
     public void startFlash(){

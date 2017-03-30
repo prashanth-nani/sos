@@ -14,15 +14,10 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
+        <item
+            android:id="@+id/nav_invite"
+            android:icon="@drawable/ic_invite"
+            android:title="Invite" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_invite"
-                android:icon="@drawable/ic_invite"
-                android:title="Invite" />
-        </menu>
-    </item>
 
 </menu>

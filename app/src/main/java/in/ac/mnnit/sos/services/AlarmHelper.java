@@ -9,12 +9,12 @@ import android.net.Uri;
  * Created by prashanth on 28/3/17.
  */
 
-public class AlarmService{
+public class AlarmHelper {
 
     private Context context;
     private MediaPlayer mediaPlayer;
 
-    public AlarmService(Context context) {
+    public AlarmHelper(Context context) {
         this.context = context;
         AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
