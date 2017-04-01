@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,7 +34,7 @@ import in.ac.mnnit.sos.services.VoiceRecordHelper;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button dangerButton;
-    Button recordButton;
+    ImageButton recordButton;
     Button stopRecordButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
@@ -72,10 +73,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             view = inflater.inflate(R.layout.fragment_home, container, false);
             dangerButton = (Button) view.findViewById(R.id.dangerButton);
 //            dangerButton.setOnClickListener(this);
-            recordButton = (Button) view.findViewById(R.id.record);
-            stopRecordButton = (Button) view.findViewById(R.id.Stop);
+            recordButton = (ImageButton) view.findViewById(R.id.record);
             recordButton.setOnClickListener(this);
-            stopRecordButton.setOnClickListener(this);
 //            flashButton = (Button) view.findViewById(R.id.flashButton);
 //            flashButton.setOnClickListener(this);
         }
@@ -224,7 +223,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(v.getId() == R.id.dangerButton){
             onClickDanger();
         }
-        else if (v.getId() == R.id.record || v.getId() == R.id.Stop)
+        else if (v.getId() == R.id.record)
         {
             if(!recording){
                 voiceRecordHelper = new VoiceRecordHelper(context);
