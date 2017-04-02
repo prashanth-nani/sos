@@ -5,7 +5,7 @@ package in.ac.mnnit.sos.services;
  */
 
 public class Config {
-    private static final String BASE_URL = "http://10.0.0.2/sos/";
+    private static final String BASE_URL = "http://sosmnnit.16mb.com/";
     public static final String REGISTER_URL = BASE_URL.concat("register.php");
     public static final String PROCESS_EMAIL_URL = BASE_URL.concat("process_email.php");
     public static final String LOGIN_URL = BASE_URL.concat("login.php");

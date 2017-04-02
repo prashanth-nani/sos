@@ -26,6 +26,7 @@ import in.ac.mnnit.sos.appServices.AlarmService;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmHelper;
 //import in.ac.mnnit.sos.services.FlashHelper;
+import in.ac.mnnit.sos.services.FlashLightHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button dangerButton;
     ImageButton recordButton;
+    ImageButton flashButton;
     Button stopRecordButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
@@ -75,8 +77,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //            dangerButton.setOnClickListener(this);
             recordButton = (ImageButton) view.findViewById(R.id.record);
             recordButton.setOnClickListener(this);
-//            flashButton = (Button) view.findViewById(R.id.flashButton);
-//            flashButton.setOnClickListener(this);
+            flashButton = (ImageButton) view.findViewById(R.id.flash);
+            flashButton.setOnClickListener(this);
         }
         return view;
     }
@@ -217,7 +219,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     boolean recording = false;
+    boolean isFlashOn = false;
     VoiceRecordHelper voiceRecordHelper;
+    FlashLightHelper flashLightHelper;
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.dangerButton){
@@ -232,6 +236,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }else {
                 voiceRecordHelper.stopRecording();
                 recording = false;
+            }
+        }
+        else if(v.getId() == R.id.flash){
+            if(!isFlashOn) {
+                flashLightHelper = new FlashLightHelper(getActivity());
+                flashLightHelper.turnOnFlashLight();
+                isFlashOn = true;
+            }
+            else {
+                flashLightHelper.turnOffFlashLight();
+                isFlashOn = false;
             }
         }
     }
