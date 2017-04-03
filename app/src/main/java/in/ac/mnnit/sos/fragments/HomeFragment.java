@@ -29,6 +29,8 @@ import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
+import in.ac.mnnit.sos.services.MyLocation;
+import in.ac.mnnit.sos.services.NearbySearchHelper;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
 
@@ -37,6 +39,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button dangerButton;
     ImageButton recordButton;
     ImageButton flashButton;
+    ImageButton nearbyButton;
     Button stopRecordButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
@@ -74,11 +77,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_home, container, false);
             dangerButton = (Button) view.findViewById(R.id.dangerButton);
-//            dangerButton.setOnClickListener(this);
+            dangerButton.setOnClickListener(this);
             recordButton = (ImageButton) view.findViewById(R.id.record);
             recordButton.setOnClickListener(this);
             flashButton = (ImageButton) view.findViewById(R.id.flash);
             flashButton.setOnClickListener(this);
+            nearbyButton = (ImageButton) view.findViewById(R.id.nearby);
+            nearbyButton.setOnClickListener(this);
         }
         return view;
     }
@@ -248,6 +253,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 flashLightHelper.turnOffFlashLight();
                 isFlashOn = false;
             }
+        }
+        else if(v.getId() == R.id.nearby){
+            LatLng latLng = new LatLng(25.491776, 81.865708);
+            NearbySearchHelper nearbySearchHelper = new NearbySearchHelper(getActivity());
+            nearbySearchHelper.search(latLng, NearbySearchHelper.POLICE_REQUEST);
         }
     }
 

@@ -15,10 +15,10 @@ public class Config {
     public static final String PROCESS_EMAIL_URL = BASE_URL.concat("process_email.php");
     public static final String LOGIN_URL = BASE_URL.concat("login.php");
 
-    public static final String MAPS_API_KEY = MainActivity.APP_CONTEXT.getResources().getString(R.string.google_maps_api_key);
 
     public static String getNearbyPlacesUrl(LatLng currentLatLng, String type)
     {
+        String MAPS_API_KEY = MainActivity.APP_CONTEXT.getResources().getString(R.string.google_maps_api_key);
         String latLngString = String.valueOf(currentLatLng.latitude)+","+String.valueOf(currentLatLng.longitude);
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+latLngString+"&rankby=distance&type="+type+"&key="+MAPS_API_KEY;
     }

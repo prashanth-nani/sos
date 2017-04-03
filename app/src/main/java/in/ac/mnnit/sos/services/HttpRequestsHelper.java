@@ -28,11 +28,6 @@ public class HttpRequestsHelper {
     public static final int REGISTER_REQUEST = 2;
     public static final int LOGIN_REQUEST = 3;
 
-    public static final int POLICE_REQUEST = 4;
-    public static final int HOSPITAL_REQUEST = 5;
-    public static final int FIRE_REQUEST = 6;
-    public static final int ATM_REQUEST = 7;
-
 
     private OnServerResponseListener onServerResponseListener;
     private RequestQueue requestQueue;
@@ -76,16 +71,16 @@ public class HttpRequestsHelper {
     public void populateNearbyPlaces(LatLng currentLatLng, int typeID){
         String url = "";
         switch (typeID){
-            case POLICE_REQUEST:
+            case NearbySearchHelper.POLICE_REQUEST:
                 url = Config.getNearbyPlacesUrl(currentLatLng, "police");
                 break;
-            case HOSPITAL_REQUEST:
+            case NearbySearchHelper.HOSPITAL_REQUEST:
                 url = Config.getNearbyPlacesUrl(currentLatLng, "hospital");
                 break;
-            case FIRE_REQUEST:
+            case NearbySearchHelper.FIRE_REQUEST:
                 url = Config.getNearbyPlacesUrl(currentLatLng, "fire_station");
                 break;
-            case ATM_REQUEST:
+            case NearbySearchHelper.ATM_REQUEST:
                 url = Config.getNearbyPlacesUrl(currentLatLng, "atm");
                 break;
         }
