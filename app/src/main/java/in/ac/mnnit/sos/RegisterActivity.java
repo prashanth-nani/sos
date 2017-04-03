@@ -14,11 +14,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import in.ac.mnnit.sos.database.ServerDatabaseAdapter;
+import in.ac.mnnit.sos.services.HttpRequestsHelper;
 import in.ac.mnnit.sos.models.User;
 
 public class RegisterActivity extends AppCompatActivity
-        implements ServerDatabaseAdapter.OnServerResponseListener{
+        implements HttpRequestsHelper.OnServerResponseListener{
 
     private EditText name;
     private EditText phone;
@@ -70,14 +70,14 @@ public class RegisterActivity extends AppCompatActivity
 
             user = new User(name.getText().toString(), phone.getText().toString(), radioButton.getText().toString(), etEmail.getText().toString(), password.getText().toString());
 
-            ServerDatabaseAdapter serverDatabaseAdapter = new ServerDatabaseAdapter(getApplicationContext(), this);
-            serverDatabaseAdapter.registerUser(user);
+            HttpRequestsHelper httpRequestsHelper = new HttpRequestsHelper(getApplicationContext(), this);
+            httpRequestsHelper.registerUser(user);
         }
     }
 
     @Override
     public void onServerResponse(int requestID, Object response) {
-        if(requestID == ServerDatabaseAdapter.REGISTER_REQUEST){
+        if(requestID == HttpRequestsHelper.REGISTER_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
             if (((String)response).equalsIgnoreCase("SUCCESS")) {
@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     public void onServerResponseError(int requestID, Object error) {
 
-        if(requestID == ServerDatabaseAdapter.REGISTER_REQUEST){
+        if(requestID == HttpRequestsHelper.REGISTER_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
             Snackbar.make(registerBtnView, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();

@@ -1,4 +1,4 @@
-package in.ac.mnnit.sos.database;
+package in.ac.mnnit.sos.services;
 
 import android.content.Context;
 
@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,16 @@ import in.ac.mnnit.sos.services.Config;
  * Created by prashanth on 2/3/17.
  */
 
-public class ServerDatabaseAdapter{
+public class HttpRequestsHelper {
 
     public static final int PROCESS_EMAIL_REQUEST = 1;
     public static final int REGISTER_REQUEST = 2;
     public static final int LOGIN_REQUEST = 3;
+
+    public static final int POLICE_REQUEST = 4;
+    public static final int HOSPITAL_REQUEST = 5;
+    public static final int FIRE_REQUEST = 6;
+    public static final int ATM_REQUEST = 7;
 
 
     private OnServerResponseListener onServerResponseListener;
@@ -35,7 +41,7 @@ public class ServerDatabaseAdapter{
     private final String processEmailUrl = Config.PROCESS_EMAIL_URL;
     private String loginUrl = Config.LOGIN_URL;
 
-    public ServerDatabaseAdapter(Context context, OnServerResponseListener onServerResponseListener) {
+    public HttpRequestsHelper(Context context, OnServerResponseListener onServerResponseListener) {
         this.onServerResponseListener = onServerResponseListener;
         requestQueue = Volley.newRequestQueue(context);
     }
@@ -67,8 +73,29 @@ public class ServerDatabaseAdapter{
         post(params, loginUrl, LOGIN_REQUEST);
     }
 
+    public void populateNearbyPlaces(LatLng currentLatLng, int typeID){
+        String url = "";
+        switch (typeID){
+            case POLICE_REQUEST:
+                url = Config.getNearbyPlacesUrl(currentLatLng, "police");
+                break;
+            case HOSPITAL_REQUEST:
+                url = Config.getNearbyPlacesUrl(currentLatLng, "hospital");
+                break;
+            case FIRE_REQUEST:
+                url = Config.getNearbyPlacesUrl(currentLatLng, "fire_station");
+                break;
+            case ATM_REQUEST:
+                url = Config.getNearbyPlacesUrl(currentLatLng, "atm");
+                break;
+        }
+        get(url, typeID);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
     private void post(Map<String, String> params, String url, final int requestID){
-        PostRequest registerRequest = new PostRequest(params, Request.Method.POST, url, new Response.Listener<String>() {
+        PostRequest postRequest = new PostRequest(params, Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 onServerResponseListener.onServerResponse(requestID, response);
@@ -80,7 +107,23 @@ public class ServerDatabaseAdapter{
             }
         });
 
-        requestQueue.add(registerRequest);
+        requestQueue.add(postRequest);
+    }
+
+    private void get(String url, final int requestID){
+        GetRequest getRequest = new GetRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                onServerResponseListener.onServerResponse(requestID, response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onServerResponseListener.onServerResponseError(requestID, error);
+            }
+        });
+
+        requestQueue.add(getRequest);
     }
 
     public interface OnServerResponseListener{

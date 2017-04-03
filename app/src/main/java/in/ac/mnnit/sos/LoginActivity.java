@@ -11,11 +11,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import in.ac.mnnit.sos.database.ServerDatabaseAdapter;
+import in.ac.mnnit.sos.services.HttpRequestsHelper;
 import in.ac.mnnit.sos.models.Credential;
 
 public class LoginActivity extends AppCompatActivity
-        implements ServerDatabaseAdapter.OnServerResponseListener {
+        implements HttpRequestsHelper.OnServerResponseListener {
 
     private EditText email;
     private EditText password;
@@ -51,14 +51,14 @@ public class LoginActivity extends AppCompatActivity
 
             Credential cred = new Credential(email.getText().toString(), passwordText);
 
-            ServerDatabaseAdapter serverDatabaseAdapter = new ServerDatabaseAdapter(getApplicationContext(), this);
-            serverDatabaseAdapter.login(cred);
+            HttpRequestsHelper httpRequestsHelper = new HttpRequestsHelper(getApplicationContext(), this);
+            httpRequestsHelper.login(cred);
         }
     }
 
     @Override
     public void onServerResponse(int requestID, Object response) {
-        if(requestID == ServerDatabaseAdapter.LOGIN_REQUEST){
+        if(requestID == HttpRequestsHelper.LOGIN_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
             if (((String)response).equalsIgnoreCase("true")) {
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     public void onServerResponseError(int requestID, Object error) {
-        if(requestID == ServerDatabaseAdapter.LOGIN_REQUEST){
+        if(requestID == HttpRequestsHelper.LOGIN_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
             Snackbar.make(loginButton, "Couldn't reach the server at the moment", Snackbar.LENGTH_LONG)

@@ -11,11 +11,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import in.ac.mnnit.sos.database.ServerDatabaseAdapter;
+import in.ac.mnnit.sos.services.HttpRequestsHelper;
 import in.ac.mnnit.sos.extras.Utils;
 
 public class ProcessEmailActivity extends AppCompatActivity
-        implements ServerDatabaseAdapter.OnServerResponseListener {
+        implements HttpRequestsHelper.OnServerResponseListener {
 
     private EditText email;
     private View continueBtnView;
@@ -56,14 +56,14 @@ public class ProcessEmailActivity extends AppCompatActivity
 
             progressBarHolder.setVisibility(View.VISIBLE);
 
-            ServerDatabaseAdapter serverDatabaseAdapter = new ServerDatabaseAdapter(getApplicationContext(), this);
-            serverDatabaseAdapter.processUserEmail(emailText);
+            HttpRequestsHelper httpRequestsHelper = new HttpRequestsHelper(getApplicationContext(), this);
+            httpRequestsHelper.processUserEmail(emailText);
         }
     }
 
     @Override
     public void onServerResponse(int requestID, Object response) {
-        if(requestID == ServerDatabaseAdapter.PROCESS_EMAIL_REQUEST){
+        if(requestID == HttpRequestsHelper.PROCESS_EMAIL_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
             Intent intent;
@@ -79,7 +79,7 @@ public class ProcessEmailActivity extends AppCompatActivity
 
     @Override
     public void onServerResponseError(int requestID, Object error) {
-        if(requestID == ServerDatabaseAdapter.PROCESS_EMAIL_REQUEST){
+        if(requestID == HttpRequestsHelper.PROCESS_EMAIL_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
             Snackbar.make(continueBtnView, "Unable to reach the server at the moment. Please try after sometime.", Snackbar.LENGTH_LONG)
