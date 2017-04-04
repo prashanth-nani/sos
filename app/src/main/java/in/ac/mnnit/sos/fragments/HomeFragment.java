@@ -130,6 +130,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         {
             serviceStarted = true;
             dangerButton.setText("Stop");
+            sendSMS();
             context.startService(alarmIntent);
         }
         else {
@@ -237,9 +238,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             if(!recording){
                 voiceRecordHelper = new VoiceRecordHelper(context);
                 voiceRecordHelper.recordAudio();
+                recordButton.setImageResource(R.drawable.ic_stop);
                 recording = true;
             }else {
                 voiceRecordHelper.stopRecording();
+                recordButton.setImageResource(R.drawable.ic_record);
                 recording = false;
             }
         }
