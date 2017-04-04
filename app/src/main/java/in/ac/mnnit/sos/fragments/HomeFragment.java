@@ -261,7 +261,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //            LatLng latLng = new LatLng(25.491776, 81.865708);
 //            NearbySearchHelper nearbySearchHelper = new NearbySearchHelper(getActivity());
 //            nearbySearchHelper.search(latLng, NearbySearchHelper.POLICE_REQUEST);
-            ((MainActivity)getActivity()).toggleBottomSheet();
+            ((MainActivity)getActivity()).showBottomSheet();
         }
     }
 
