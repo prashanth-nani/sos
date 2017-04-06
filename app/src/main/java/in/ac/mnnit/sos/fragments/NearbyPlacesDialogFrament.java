@@ -55,6 +55,6 @@ public class NearbyPlacesDialogFrament extends BottomSheetDialogFragment impleme
                 Log.d("Tag", "ATM");
                 break;
         }
-//        ((MainActivity)getActivity()).dismissBottomSheet();
+        ((MainActivity)getActivity()).dismissBottomSheet();
     }
 }

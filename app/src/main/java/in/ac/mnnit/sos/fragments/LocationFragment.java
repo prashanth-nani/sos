@@ -1,45 +1,28 @@
 package in.ac.mnnit.sos.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -52,7 +35,6 @@ import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.models.Address;
 import in.ac.mnnit.sos.models.Contact;
 import in.ac.mnnit.sos.services.InternetHelper;
-import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.MyLocation;
 
@@ -163,7 +145,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         LocationService locationService = new LocationService(getActivity());
         LatLng latLng = null;
         Utils utils = new Utils();
-//        Bitmap star = utils.getBitmapFromVectorResource();
         BitmapDescriptor star = utils.getMarkerIconFromDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars));
 
 
@@ -184,18 +165,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
             @Override
             public void gotLocation(Location location){
-                currentLocation = location;
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                map.addMarker(new MarkerOptions()
-                                .position(myLocation)
-                                .title("Your location"));
-                Circle outerCircle = map.addCircle(new CircleOptions()
-                        .center(myLocation)
-                        .radius(10000)
-                        .strokeColor(Color.argb(0, 0, 0, 1))
-                        .fillColor(circleColor));
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 11.5));
-
+                updateCurrentLocationOnMap(location);
                 gettingLocationText.setVisibility(View.INVISIBLE);
                 if(mapFragment.getView() != null)
                     mapFragment.getView().setVisibility(View.VISIBLE);
@@ -203,6 +173,29 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         };
         MyLocation myLocation = new MyLocation();
         myLocation.getLocation(getActivity(), locationResult);
+    }
+
+    Marker currentLocationMarker;
+    Circle radiusCircle;
+
+    private void updateCurrentLocationOnMap(Location location){
+        currentLocation = location;
+
+        if(currentLocationMarker != null && radiusCircle != null) {
+            currentLocationMarker.remove();
+            radiusCircle.remove();
+        }
+
+        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLocationMarker = map.addMarker(new MarkerOptions()
+                .position(myLocation)
+                .title("Your location"));
+        radiusCircle = map.addCircle(new CircleOptions()
+                .center(myLocation)
+                .radius(10000)
+                .strokeColor(Color.argb(0, 0, 0, 1))
+                .fillColor(circleColor));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 11.5));
     }
 
     public void goToCurrentLocation(){

@@ -112,10 +112,12 @@ public class MainActivity extends AppCompatActivity
 
         fabNearby = (FloatingActionButton) findViewById(R.id.fab_nearby);
         fabNearby.setVisibility(View.GONE);
-
-//        View bottomSheet = findViewById(R.id.bottom_sheet_nearby_menu);
-//        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-//        mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN ? BottomSheetBehavior.STATE_COLLAPSED : BottomSheetBehavior.STATE_HIDDEN);
+        fabNearby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheet();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
