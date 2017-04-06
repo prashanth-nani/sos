@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
         HomeFragment homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.content_main, homeFragment, "homeFragment");
+        transaction.add(R.id.contact_list_frame, homeFragment, "homeFragment");
         transaction.commit();
 
         LocationService locationService = new LocationService(this);
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity
             contactFragment = new ContactFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        transaction.replace(R.id.content_main, contactFragment, "contactFragment");
+        transaction.replace(R.id.contact_list_frame, contactFragment, "contactFragment");
         transaction.addToBackStack("contactFragment");
         transaction.commit();
 
@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity
             homeFragment = new HomeFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        transaction.replace(R.id.content_main, homeFragment, "homeFragment");
+        transaction.replace(R.id.contact_list_frame, homeFragment, "homeFragment");
         transaction.addToBackStack("homeFragment");
         transaction.commit();
     }
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity
             locationFragment= new LocationFragment();
         transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        transaction.replace(R.id.content_main, locationFragment, "locationFragment");
+        transaction.replace(R.id.contact_list_frame, locationFragment, "locationFragment");
         transaction.addToBackStack("locationFragment");
         transaction.commit();
         fab.setImageResource(R.drawable.ic_my_location);
