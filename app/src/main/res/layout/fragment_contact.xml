@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:padding="5dp"
-                    android:src="@drawable/ic_edit"/>
+                    app:srcCompat="@drawable/ic_edit"/>
 
                 <ImageButton
                     android:id="@+id/delete_contact"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:padding="5dp"
-                    android:src="@drawable/ic_delete" />
+                    app:srcCompat="@drawable/ic_delete" />
 
                 <ImageButton
                     android:id="@+id/more_contact_actions"
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:padding="5dp"
-                    android:src="@drawable/ic_more_vert"/>
+                    app:srcCompat="@drawable/ic_more_vert"/>
 
             </LinearLayout>
         </LinearLayout>

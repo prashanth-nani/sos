@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button dangerButton;
     ImageButton recordButton;
     ImageButton flashButton;
-    ImageButton nearbyButton;
-    Button stopRecordButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
     private boolean serviceStarted = false;
@@ -76,14 +75,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_home, container, false);
+            view.setOnClickListener(this);
             dangerButton = (Button) view.findViewById(R.id.dangerButton);
             dangerButton.setOnClickListener(this);
             recordButton = (ImageButton) view.findViewById(R.id.record);
             recordButton.setOnClickListener(this);
             flashButton = (ImageButton) view.findViewById(R.id.flash);
             flashButton.setOnClickListener(this);
-            nearbyButton = (ImageButton) view.findViewById(R.id.nearby);
-            nearbyButton.setOnClickListener(this);
         }
         return view;
     }
@@ -250,19 +248,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             if(!isFlashOn) {
                 flashLightHelper = new FlashLightHelper(getActivity());
                 flashLightHelper.turnOnFlashLight();
+                flashButton.setImageResource(R.drawable.ic_flash_on);
                 isFlashOn = true;
             }
             else {
                 flashLightHelper.turnOffFlashLight();
+                flashButton.setImageResource(R.drawable.ic_flash_off);
                 isFlashOn = false;
             }
         }
-        else if(v.getId() == R.id.nearby){
-//            LatLng latLng = new LatLng(25.491776, 81.865708);
-//            NearbySearchHelper nearbySearchHelper = new NearbySearchHelper(getActivity());
-//            nearbySearchHelper.search(latLng, NearbySearchHelper.POLICE_REQUEST);
-            ((MainActivity)getActivity()).showBottomSheet();
-        }
+//        else if(v.getId() == R.id.nearby){
+////            LatLng latLng = new LatLng(25.491776, 81.865708);
+////            NearbySearchHelper nearbySearchHelper = new NearbySearchHelper(getActivity());
+////            nearbySearchHelper.search(latLng, NearbySearchHelper.POLICE_REQUEST);
+//            ((MainActivity)getActivity()).showBottomSheet();
+//        }
     }
 
     /**

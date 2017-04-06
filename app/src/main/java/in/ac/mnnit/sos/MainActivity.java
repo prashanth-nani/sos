@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private FloatingActionButton fab;
+    private FloatingActionButton fabNearby;
     private BottomSheetBehavior mBottomSheetBehavior;
     private Button dangerButton;
 
@@ -109,7 +110,10 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
-//        View bottomSheet = findViewById(R.id.bottom_sheet);
+        fabNearby = (FloatingActionButton) findViewById(R.id.fab_nearby);
+        fabNearby.setVisibility(View.GONE);
+
+//        View bottomSheet = findViewById(R.id.bottom_sheet_nearby_menu);
 //        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 //        mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN ? BottomSheetBehavior.STATE_COLLAPSED : BottomSheetBehavior.STATE_HIDDEN);
 
@@ -203,9 +207,14 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(contactsIntent, REQUEST_CODE_PICK_CONTACTS);
     }
 
+    BottomSheetDialogFragment bottomSheetDialogFragment;
     public void showBottomSheet(){
-        BottomSheetDialogFragment bottomSheetDialogFragment = new NearbyPlacesDialogFrament();
+        bottomSheetDialogFragment = new NearbyPlacesDialogFrament();
         bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+    }
+
+    public void dismissBottomSheet(){
+        bottomSheetDialogFragment.dismiss();
     }
 
     @Override
@@ -335,8 +344,9 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_activity) {
 
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_settings) {
+            Intent i = new Intent(getBaseContext(), SettingsActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_invite) {
 
         }
@@ -358,6 +368,8 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.content_main, contactFragment, "contactFragment");
         transaction.addToBackStack("contactFragment");
         transaction.commit();
+
+        fabNearby.setVisibility(View.GONE);
         fab.setImageResource(R.drawable.ic_person_add_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -369,6 +381,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showHome(){
+        fabNearby.setVisibility(View.GONE);
         fab.setVisibility(View.GONE);
         HomeFragment homeFragment;
         Fragment fragment = fragmentManager.findFragmentByTag("homeFragment");
@@ -408,6 +421,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         fab.setVisibility(View.VISIBLE);
+        fabNearby.setVisibility(View.VISIBLE);
     }
 
 
