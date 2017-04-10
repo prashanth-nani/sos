@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.PlacesActivity;
 import in.ac.mnnit.sos.R;
+import in.ac.mnnit.sos.services.NearbySearchHelper;
 
 /**
  * Created by prashanth on 5/4/17.
@@ -39,20 +40,31 @@ public class NearbyPlacesDialogFrament extends BottomSheetDialogFragment impleme
 
     @Override
     public void onClick(View v) {
+        Intent i;
         switch (v.getId()){
             case R.id.police_button:
                 Log.d("Tag", "Poice");
-                Intent i = new Intent(getContext(), PlacesActivity.class);
+                i = new Intent(getContext(), PlacesActivity.class);
+                i.putExtra("typeId", NearbySearchHelper.POLICE_REQUEST);
                 startActivity(i);
                 break;
             case R.id.hospital_button:
                 Log.d("Tag", "Hospital");
+                i = new Intent(getContext(), PlacesActivity.class);
+                i.putExtra("typeId", NearbySearchHelper.HOSPITAL_REQUEST);
+                startActivity(i);
                 break;
             case R.id.fire_button:
                 Log.d("Tag", "Fire");
+                i = new Intent(getContext(), PlacesActivity.class);
+                i.putExtra("typeId", NearbySearchHelper.FIRE_REQUEST);
+                startActivity(i);
                 break;
             case R.id.atm_button:
                 Log.d("Tag", "ATM");
+                i = new Intent(getContext(), PlacesActivity.class);
+                i.putExtra("typeId", NearbySearchHelper.ATM_REQUEST);
+                startActivity(i);
                 break;
         }
         ((MainActivity)getActivity()).dismissBottomSheet();

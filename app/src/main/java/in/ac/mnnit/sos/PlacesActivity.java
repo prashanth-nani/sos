@@ -9,7 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import in.ac.mnnit.sos.fragments.PlaceFragment;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent;
+import in.ac.mnnit.sos.models.Place;
+import in.ac.mnnit.sos.services.LocationDetailsHolder;
 
 public class PlacesActivity extends AppCompatActivity implements PlaceFragment.OnListFragmentInteractionListener{
 
@@ -24,9 +25,17 @@ public class PlacesActivity extends AppCompatActivity implements PlaceFragment.O
         setSupportActionBar(toolbar);
         setupActionBar();
 
+        Bundle extras = getIntent().getExtras();
+
+        Bundle args = new Bundle();
+        args.putDouble("lat", LocationDetailsHolder.LATEST_LOCATION.latitude);
+        args.putDouble("lng", LocationDetailsHolder.LATEST_LOCATION.longitude);
+        args.putInt("typeId", (int) extras.get("typeId"));
+
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         PlaceFragment placeListFragment = new PlaceFragment();
+        placeListFragment.setArguments(args);
         fragmentTransaction.add(R.id.place_list_frame, placeListFragment, "placeListFragment");
         fragmentTransaction.commit();
     }
@@ -49,7 +58,7 @@ public class PlacesActivity extends AppCompatActivity implements PlaceFragment.O
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Place place) {
 
     }
 }

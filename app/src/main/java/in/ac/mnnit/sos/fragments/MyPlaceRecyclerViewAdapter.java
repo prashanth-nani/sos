@@ -8,22 +8,18 @@ import android.widget.TextView;
 
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.fragments.PlaceFragment.OnListFragmentInteractionListener;
-import in.ac.mnnit.sos.fragments.dummy.DummyContent.DummyItem;
+import in.ac.mnnit.sos.models.Place;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Place> mPlaces;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPlaceRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyPlaceRecyclerViewAdapter(List<Place> places, OnListFragmentInteractionListener listener) {
+        mPlaces = places;
         mListener = listener;
     }
 
@@ -36,9 +32,11 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mPlace = mPlaces.get(position);
+        holder.mPlaceName.setText(mPlaces.get(position).getName());
+        holder.mPlaceVicinity.setText(mPlaces.get(position).getVicinity());
+        String ratingText = "Rating: "+mPlaces.get(position).getRating();
+        holder.mPlaceRating.setText(ratingText);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +44,7 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mPlace);
                 }
             }
         });
@@ -54,25 +52,22 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mPlaces.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mPlaceName;
+        public final TextView mPlaceVicinity;
+        public final TextView mPlaceRating;
+        public Place mPlace;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            mPlaceName = (TextView) view.findViewById(R.id.place_name);
+            mPlaceVicinity = (TextView) view.findViewById(R.id.place_vicinity);
+            mPlaceRating = (TextView) view.findViewById(R.id.place_rating);
         }
     }
 }
