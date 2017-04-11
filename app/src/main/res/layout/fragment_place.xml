@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/place_details"
@@ -26,21 +27,23 @@
                 android:text="Place name"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"/>
 
             <TextView
                 android:id="@+id/place_vicinity"
                 android:text="Place vicinity"
                 android:textSize="12sp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"/>
 
             <TextView
                 android:id="@+id/place_rating"
                 android:text="Rating"
                 android:textSize="12sp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
@@ -55,6 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_call"
+                android:background="@android:color/transparent"
+                android:paddingBottom="7dp"
                 android:layout_gravity="center"/>
 
             <TextView
@@ -77,7 +82,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_directions"
-                android:layout_gravity="center"/>
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:paddingBottom="7dp"/>
 
             <TextView
                 android:text="Directions"
