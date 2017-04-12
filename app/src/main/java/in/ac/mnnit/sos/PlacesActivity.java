@@ -8,7 +8,6 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,7 +18,6 @@ import in.ac.mnnit.sos.fragments.PlaceDetailsBottomSheetFragment;
 import in.ac.mnnit.sos.fragments.PlaceFragment;
 import in.ac.mnnit.sos.models.Place;
 import in.ac.mnnit.sos.services.HttpRequestsHelper;
-import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MyLocation;
 import in.ac.mnnit.sos.services.NearbySearchHelper;
 
