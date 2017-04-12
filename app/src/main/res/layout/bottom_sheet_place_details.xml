@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="15dp">
 
     <TextView
-        android:id="@+id/place"
-        android:text="Place"
+        android:id="@+id/place_details_name"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"/>
 
+    <TextView
+        android:id="@+id/place_details_address"
+        android:textSize="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_address"
+        android:drawableStart="@drawable/ic_address"
+        android:drawablePadding="5dp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/place_details_phone"
+        android:textSize="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_call"
+        android:drawableStart="@drawable/ic_call"
+        android:drawablePadding="5dp"
+        android:paddingBottom="50dp"/>
 </LinearLayout>

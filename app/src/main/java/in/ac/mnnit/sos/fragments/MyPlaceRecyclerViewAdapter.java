@@ -1,5 +1,7 @@
 package in.ac.mnnit.sos.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import in.ac.mnnit.sos.PlacesActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.fragments.PlaceFragment.OnListFragmentInteractionListener;
 import in.ac.mnnit.sos.models.Place;
@@ -35,7 +38,7 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mPlace = mPlaces.get(position);
-        Place mPlace = mPlaces.get(position);
+        final Place mPlace = mPlaces.get(position);
 
         String placeName = mPlace.getName();
         String placeVicinity = mPlace.getVicinity();
@@ -71,6 +74,15 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mPlace);
                 }
+            }
+        });
+
+        holder.mPlaceDirectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr="+ mPlace.getLatitude()+","+mPlace.getLongitude()));
+                ((PlacesActivity)mListener).startActivity(intent);
             }
         });
     }

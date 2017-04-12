@@ -65,6 +65,10 @@ public class Place {
         return rating;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
