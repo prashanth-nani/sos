@@ -1,5 +1,7 @@
 package in.ac.mnnit.sos.services;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import in.ac.mnnit.sos.MainActivity;
@@ -20,6 +22,12 @@ public class Config {
     {
         String MAPS_API_KEY = MainActivity.APP_CONTEXT.getResources().getString(R.string.google_maps_api_key);
         String latLngString = String.valueOf(currentLatLng.latitude)+","+String.valueOf(currentLatLng.longitude);
+        Log.d("TAG", "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+latLngString+"&rankby=distance&type="+type+"&key="+MAPS_API_KEY);
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+latLngString+"&rankby=distance&type="+type+"&key="+MAPS_API_KEY;
+    }
+
+    public static String getPlaceDetailsUrl(String reference){
+        String MAPS_API_KEY = MainActivity.APP_CONTEXT.getResources().getString(R.string.google_maps_api_key);
+        return "https://maps.googleapis.com/maps/api/place/details/json?key="+MAPS_API_KEY+"&reference="+reference;
     }
 }

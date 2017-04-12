@@ -87,6 +87,11 @@ public class HttpRequestsHelper {
         get(url, typeID);
     }
 
+    public void populatePlaceDetailsByReference(String reference){
+        String url = Config.getPlaceDetailsUrl(reference);
+        get(url, NearbySearchHelper.PLACE_DETAILS_REQUEST);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     private void post(Map<String, String> params, String url, final int requestID){
