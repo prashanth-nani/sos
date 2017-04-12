@@ -8,6 +8,13 @@
     tools:context="in.ac.mnnit.sos.PlacesActivity"
     tools:showIn="@layout/activity_places">
 
+    <TextView
+        android:id="@+id/gettingPlacesText"
+        android:text="Getting nearest places..."
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
+
     <FrameLayout
         android:id="@+id/place_list_frame"
         android:layout_width="match_parent"

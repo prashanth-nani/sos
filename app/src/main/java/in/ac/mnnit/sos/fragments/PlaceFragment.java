@@ -122,6 +122,8 @@ public class PlaceFragment extends Fragment implements HttpRequestsHelper.OnServ
                     int len = resultsArray.length();
                     for (int i = 0; i < len; i++) {
                         JSONObject temp = resultsArray.getJSONObject(i);
+                        String id = temp.getString("place_id");
+                        String reference = temp.getString("reference");
                         double lat = (double) temp.getJSONObject("geometry").getJSONObject("location").get("lat");
                         double lng = (double) temp.getJSONObject("geometry").getJSONObject("location").get("lng");
                         String name = (String) temp.get("name");
@@ -132,21 +134,24 @@ public class PlaceFragment extends Fragment implements HttpRequestsHelper.OnServ
                         try {
                             rating = temp.get("rating").toString();
                         } catch (Exception e) {
-                            e.printStackTrace();
+//                            e.printStackTrace();
                         }
                         try {
-                            phone = temp.getString("international_phone_number");
+                            phone = temp.get("international_phone_number").toString();
                         }
                         catch (Exception e){
-                            e.printStackTrace();
+//                            e.printStackTrace();
                         }
-                        Log.d("TAG", name + "\n" + lat + "," + lng + "\n" + vicinity + "\n" + rating + "\n\n");
-                        places.add(new Place(lat, lng, name, iconLink, vicinity, rating, phone));
+                        Log.d("TAG", id+"\n"+reference+"\n"+name + "\n" + lat + "," + lng + "\n" + vicinity + "\n" + rating + "\n"+phone+"\n\n");
+                        places.add(new Place(id, reference, lat, lng, name, iconLink, vicinity, rating, phone));
                     }
                     recyclerView.setAdapter(new MyPlaceRecyclerViewAdapter(places, mListener));
                 }
+                else {
+                    Log.e("TAG", "Error: Received status code "+statusCode+" while getting places");
+                }
             } catch (JSONException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
     }

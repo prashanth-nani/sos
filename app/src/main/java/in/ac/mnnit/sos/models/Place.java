@@ -12,8 +12,13 @@ public class Place {
     private String vicinity;
     private String rating;
     private String phone;
+    private String address;
+    private String id;
+    private String reference;
 
-    public Place(double latitude, double longitude, String name, String iconLink, String vicinity, String rating, String phone) {
+    public Place(String id, String reference, double latitude, double longitude, String name, String iconLink, String vicinity, String rating, String phone) {
+        this.id = id;
+        this.reference = reference;
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = name;
@@ -21,6 +26,14 @@ public class Place {
         this.vicinity = vicinity;
         this.rating = rating;
         this.phone = phone;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getReference() {
+        return reference;
     }
 
     public double getLatitude() {
@@ -50,5 +63,13 @@ public class Place {
 
     public String getRating() {
         return rating;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

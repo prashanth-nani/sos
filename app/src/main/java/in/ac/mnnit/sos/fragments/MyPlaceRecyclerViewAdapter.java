@@ -1,9 +1,11 @@
 package in.ac.mnnit.sos.fragments;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.ac.mnnit.sos.R;
@@ -33,12 +35,35 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mPlace = mPlaces.get(position);
-        holder.mPlaceName.setText(mPlaces.get(position).getName());
-        holder.mPlaceVicinity.setText(mPlaces.get(position).getVicinity());
-        String ratingText = "Rating: "+mPlaces.get(position).getRating();
+        Place mPlace = mPlaces.get(position);
+
+        String placeName = mPlace.getName();
+        String placeVicinity = mPlace.getVicinity();
+        String placeRating = mPlace.getRating();
+        String placePhone = mPlace.getPhone();
+
+        if(placeName != null)
+            holder.mPlaceName.setText(placeName);
+        else
+            holder.mPlaceName.setText("N/A");
+
+        if(placeVicinity != null)
+            holder.mPlaceVicinity.setText(placeVicinity);
+        else
+            holder.mPlaceVicinity.setText("N/A");
+
+        String ratingText;
+        if(placeRating != null)
+            ratingText = "Rating: "+placeRating;
+        else
+            ratingText = "Rating: N/A";
         holder.mPlaceRating.setText(ratingText);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        if(placePhone == null){
+            holder.mPlaceCallButton.setVisibility(View.GONE);
+        }
+
+        holder.mPlaceDetailsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
@@ -60,14 +85,20 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
         public final TextView mPlaceName;
         public final TextView mPlaceVicinity;
         public final TextView mPlaceRating;
+        public final LinearLayout mPlaceCallButton;
+        public final LinearLayout mPlaceDirectionButton;
+        public final LinearLayout mPlaceDetailsLayout;
         public Place mPlace;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mPlaceDetailsLayout = (LinearLayout) view.findViewById(R.id.place_details);
             mPlaceName = (TextView) view.findViewById(R.id.place_name);
             mPlaceVicinity = (TextView) view.findViewById(R.id.place_vicinity);
             mPlaceRating = (TextView) view.findViewById(R.id.place_rating);
+            mPlaceCallButton = (LinearLayout) view.findViewById(R.id.place_call_button);
+            mPlaceDirectionButton = (LinearLayout) view.findViewById(R.id.place_navigate_button);
         }
     }
 }
