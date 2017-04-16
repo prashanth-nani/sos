@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +35,8 @@ import in.ac.mnnit.sos.services.MyLocation;
 import in.ac.mnnit.sos.services.NearbySearchHelper;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
@@ -42,7 +45,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageButton flashButton;
     private AlarmHelper alarmHelper;
 //    private FlashHelper flashService;
-    private boolean serviceStarted = false;
+    private boolean serviceRunning = false;
     private boolean serviceInitiated =  false;
     private View view;
     private Activity activity;
@@ -64,6 +67,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("alarmService", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
         alarmHelper = new AlarmHelper(getActivity());
         alarmIntent = new Intent(getActivity(), AlarmService.class);
 //        flashService = new FlashHelper(getActivity());
@@ -82,6 +88,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             recordButton.setOnClickListener(this);
             flashButton = (ImageButton) view.findViewById(R.id.flash);
             flashButton.setOnClickListener(this);
+
+            if(serviceRunning)
+                dangerButton.setText("STOP");
         }
         return view;
     }
@@ -124,9 +133,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //    }
 
     public void onClickDanger(){
-        if(!serviceStarted)
+        if(! serviceRunning)
         {
-            serviceStarted = true;
+             serviceRunning = true;
             dangerButton.setText("Stop");
             sendSMS();
             context.startService(alarmIntent);
@@ -134,7 +143,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         else {
             context.stopService(alarmIntent);
             dangerButton.setText("I am in\r\ndanger");
-            serviceStarted = false;
+             serviceRunning = false;
         }
     }
 
