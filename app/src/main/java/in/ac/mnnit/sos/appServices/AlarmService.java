@@ -4,14 +4,24 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmHelper;
+import in.ac.mnnit.sos.services.LocationDetailsHolder;
+import in.ac.mnnit.sos.services.MessageService;
 
 public class AlarmService extends Service {
     AlarmHelper alarmHelper;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
+    Thread smsthread;
 
 
     public static boolean running = false;
@@ -27,8 +37,12 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("TAG", "here");
         Thread thread = new Thread(new AlarmThread(startId));
         thread.start();
+        smsthread = new Thread(new SMSThread(startId));
+//        smsthread.start();
+
         running = true;
         editor.putBoolean("alarmOn", true);
         editor.apply();
@@ -39,6 +53,8 @@ public class AlarmService extends Service {
     public void onDestroy() {
         Toast.makeText(this, "Alarm Service stopped", Toast.LENGTH_SHORT).show();
         alarmHelper.stopAlarm();
+//        smsthread.interrupt();
+//        smsthread.stop();
         running = false;
         editor.putBoolean("alarmOn", false);
         editor.apply();
@@ -58,10 +74,42 @@ public class AlarmService extends Service {
             this.serviceId = serviceId;
         }
 
+
         @Override
         public void run() {
             alarmHelper = new AlarmHelper(AlarmService.this);
             alarmHelper.startAlarm();
+        }
+    }
+
+    private final class SMSThread implements Runnable{
+        int serviceId;
+
+        SMSThread(int serviceId){
+            this.serviceId = serviceId;
+        }
+
+        @Override
+        public void run() {
+            sendSMS();
+        }
+
+        public void sendSMS(){
+            MessageService messageService = new MessageService();
+            LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(AlarmService.this);
+            ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
+            String locationBaseLink = "http://maps.google.com/maps?q=";
+            String locationMapLink;
+            String messageContent =  "Please help!! I'm in danger.";
+            LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+            LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
+            if(bestKnownLoc != null)
+            {
+                locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude)+","+String.valueOf(bestKnownLoc.longitude));
+                messageContent = "Please help!! I'm in danger. I'm at "+locationMapLink;
+            }
+            messageService.sendSMS(phones, messageContent);
+            Log.d("TAG", "SMS Sent");
         }
     }
 }

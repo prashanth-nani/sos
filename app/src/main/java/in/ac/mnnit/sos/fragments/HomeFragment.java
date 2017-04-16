@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +19,20 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.appServices.AlarmService;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmHelper;
-//import in.ac.mnnit.sos.services.FlashHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
-import in.ac.mnnit.sos.services.MyLocation;
-import in.ac.mnnit.sos.services.NearbySearchHelper;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
 import static android.content.Context.MODE_PRIVATE;
+
+//import in.ac.mnnit.sos.services.FlashHelper;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -44,9 +41,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageButton recordButton;
     ImageButton flashButton;
     private AlarmHelper alarmHelper;
-//    private FlashHelper flashService;
+    //    private FlashHelper flashService;
     private boolean serviceRunning = false;
-    private boolean serviceInitiated =  false;
+    private boolean serviceInitiated = false;
     private View view;
     private Activity activity;
     private Intent alarmIntent;
@@ -61,7 +58,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public HomeFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -79,7 +75,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(view == null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_home, container, false);
             view.setOnClickListener(this);
             dangerButton = (Button) view.findViewById(R.id.dangerButton);
@@ -89,7 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             flashButton = (ImageButton) view.findViewById(R.id.flash);
             flashButton.setOnClickListener(this);
 
-            if(serviceRunning)
+            if (serviceRunning)
                 dangerButton.setText("STOP");
         }
         return view;
@@ -99,11 +95,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
-        if(serviceRunning)
+        if (serviceRunning)
             dangerButton.setText("STOP");
     }
 
-    public void initializeTimers(){
+    public void initializeTimers() {
         alarmTimer = new Timer();
         taskTimer = new Timer();
     }
@@ -140,22 +136,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        }
 //    }
 
-    public void onClickDanger(){
-        if(! serviceRunning)
-        {
-             serviceRunning = true;
+    public void onClickDanger() {
+        if (!serviceRunning) {
+            serviceRunning = true;
             dangerButton.setText("Stop");
-            sendSMS();
+//            sendSMS();
             context.startService(alarmIntent);
-        }
-        else {
+        } else {
             context.stopService(alarmIntent);
             dangerButton.setText("I am in\r\ndanger");
-             serviceRunning = false;
+            serviceRunning = false;
         }
     }
 
-    public void changeText(){
+    public void changeText() {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -164,38 +158,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    public void kickOffTasks(){
-        sendSMS();
+    public void kickOffTasks() {
+//        sendSMS();
     }
 
-    public void sendSMS(){
-        MessageService messageService = new MessageService();
-        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
-        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
-        String locationBaseLink = "http://maps.google.com/maps?q=";
-        String locationMapLink;
-        String messageContent =  "Please help!! I'm in danger.";
-        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
-        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
-        if(bestKnownLoc != null)
-        {
-            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude)+","+String.valueOf(bestKnownLoc.longitude));
-            messageContent = "Please help!! I'm in danger. I'm at "+locationMapLink;
-        }
-        messageService.sendSMS(phones, messageContent);
-        Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
-    }
+//    public void sendSMS() {
+//        MessageService messageService = new MessageService();
+//        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
+//        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
+//        String locationBaseLink = "http://maps.google.com/maps?q=";
+//        String locationMapLink;
+//        String messageContent = "Please help!! I'm in danger.";
+//        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+//        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
+//        if (bestKnownLoc != null) {
+//            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude) + "," + String.valueOf(bestKnownLoc.longitude));
+//            messageContent = "Please help!! I'm in danger. I'm at " + locationMapLink;
+//        }
+//        messageService.sendSMS(phones, messageContent);
+//        Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
+//                .setAction("Action", null).show();
+//    }
 
-    public void startAlarm(){
+    public void startAlarm() {
         alarmHelper.startAlarm();
     }
 
-    public void stopAlarm(){
+    public void stopAlarm() {
         alarmHelper.stopAlarm();
     }
 
-    public void startFlash(){
+    public void startFlash() {
 //        flashService.startOn();
     }
 
@@ -224,12 +217,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-    public void startRecording(){
+    public void startRecording() {
         VoiceRecordHelper voiceRecordHelper = new VoiceRecordHelper(context);
         voiceRecordHelper.recordAudio();
     }
 
-    public void stopRecording(){
+    public void stopRecording() {
 
     }
 
@@ -243,32 +236,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     boolean isFlashOn = false;
     VoiceRecordHelper voiceRecordHelper;
     FlashLightHelper flashLightHelper;
+
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.dangerButton){
+        if (v.getId() == R.id.dangerButton) {
             onClickDanger();
-        }
-        else if (v.getId() == R.id.record)
-        {
-            if(!recording){
+        } else if (v.getId() == R.id.record) {
+            if (!recording) {
                 voiceRecordHelper = new VoiceRecordHelper(context);
                 voiceRecordHelper.recordAudio();
                 recordButton.setImageResource(R.drawable.ic_stop);
                 recording = true;
-            }else {
+            } else {
                 voiceRecordHelper.stopRecording();
                 recordButton.setImageResource(R.drawable.ic_record);
                 recording = false;
             }
-        }
-        else if(v.getId() == R.id.flash){
-            if(!isFlashOn) {
+        } else if (v.getId() == R.id.flash) {
+            if (!isFlashOn) {
                 flashLightHelper = new FlashLightHelper(getActivity());
                 flashLightHelper.turnOnFlashLight();
                 flashButton.setImageResource(R.drawable.ic_flash_on);
                 isFlashOn = true;
-            }
-            else {
+            } else {
                 flashLightHelper.turnOffFlashLight();
                 flashButton.setImageResource(R.drawable.ic_flash_off);
                 isFlashOn = false;
