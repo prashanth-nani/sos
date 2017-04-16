@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fabNearby;
     private BottomSheetBehavior mBottomSheetBehavior;
     private Button dangerButton;
+    private TextView username, userEmail;
 
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final int REQUEST_CODE_SETTINGS = 2;
@@ -110,6 +113,17 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        SharedPreferences prefs = getSharedPreferences("session", MODE_PRIVATE);
+        String name = prefs.getString("name", "No name");
+        String email = prefs.getString("email", "No email");
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerLayout = navigationView.getHeaderView(0);
+        username = (TextView) headerLayout.findViewById(R.id.user_namex);
+        userEmail = (TextView) headerLayout.findViewById(R.id.user_emailx);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
@@ -127,9 +141,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         dangerButton = (Button) findViewById(R.id.dangerButton);
 
@@ -150,6 +161,9 @@ public class MainActivity extends AppCompatActivity
 
         LocationService locationService = new LocationService(this);
         locationService.trackUserLocation();
+
+        username.setText(name);
+        userEmail.setText(email);
     }
 
     private  void registerPowerButtonBroadcastReceiver(){
@@ -336,12 +350,6 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(getBaseContext(), SelfHelp.class);
             startActivity(i);
         }
-        else if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_logout){
-            LogoutUser logoutUser = new LogoutUser(getApplicationContext());
-            logoutUser.logout();
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -353,14 +361,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_account) {
-            // Handle the camera action
-        } else if (id == R.id.nav_activity) {
-
+            Intent intent = new Intent(this, MyAccount.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
             Intent i = new Intent(getBaseContext(), SettingsActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_invite) {
-
+        } else if (id == R.id.nav_logout) {
+            LogoutUser logoutUser = new LogoutUser(getApplicationContext());
+            logoutUser.logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

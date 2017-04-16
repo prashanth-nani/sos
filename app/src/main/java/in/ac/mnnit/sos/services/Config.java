@@ -13,6 +13,7 @@ import in.ac.mnnit.sos.R;
 
 public class Config {
     private static final String BASE_URL = "http://sosmnnit.16mb.com/";
+//private static final String BASE_URL = "http://172.31.74.249/sos-php-server/";
     public static final String REGISTER_URL = BASE_URL.concat("register.php");
     public static final String PROCESS_EMAIL_URL = BASE_URL.concat("process_email.php");
     public static final String LOGIN_URL = BASE_URL.concat("login.php");

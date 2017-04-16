@@ -8,26 +8,19 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
 import java.util.Timer;
 
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.appServices.AlarmService;
-import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
-import in.ac.mnnit.sos.services.LocationDetailsHolder;
-import in.ac.mnnit.sos.services.MessageService;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -40,6 +33,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button dangerButton;
     ImageButton recordButton;
     ImageButton flashButton;
+    ImageButton volumeButton;
     private AlarmHelper alarmHelper;
     //    private FlashHelper flashService;
     private boolean serviceRunning = false;
@@ -84,6 +78,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             recordButton.setOnClickListener(this);
             flashButton = (ImageButton) view.findViewById(R.id.flash);
             flashButton.setOnClickListener(this);
+            volumeButton = (ImageButton) view.findViewById(R.id.sound);
+            volumeButton.setOnClickListener(this);
 
             if (serviceRunning)
                 dangerButton.setText("STOP");
@@ -263,6 +259,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 flashButton.setImageResource(R.drawable.ic_flash_off);
                 isFlashOn = false;
             }
+        } else if(v.getId() == R.id.sound){
+            alarmHelper.stopAlarm();
+            volumeButton.setImageResource(R.drawable.ic_volume_up);
         }
 //        else if(v.getId() == R.id.nearby){
 ////            LatLng latLng = new LatLng(25.491776, 81.865708);

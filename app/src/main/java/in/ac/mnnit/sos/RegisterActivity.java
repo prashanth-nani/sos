@@ -14,6 +14,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import in.ac.mnnit.sos.services.HttpRequestsHelper;
 import in.ac.mnnit.sos.models.User;
 
@@ -80,24 +83,39 @@ public class RegisterActivity extends AppCompatActivity
         if(requestID == HttpRequestsHelper.REGISTER_REQUEST){
             progressBarHolder.setVisibility(View.GONE);
 
-            if (((String)response).equalsIgnoreCase("SUCCESS")) {
-                Snackbar.make(findViewById(android.R.id.content), "Successfully registered!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            JSONObject result = null;
+            String status = "ERROR";
 
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("name", user.getName());
-                intent.putExtra("email", user.getEmail());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
+            try {
+                result = new JSONObject((String) response);
+                status = result.getString("status");
 
-                SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("loggedin", true);
-                editor.apply();
-            } else {
-                Toast.makeText(RegisterActivity.this, (String)response, Toast.LENGTH_LONG).show();
+                if (status.equalsIgnoreCase("OK")) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("loggedin", true);
+                    editor.putString("name", result.getString("name"));
+                    editor.putString("email", result.getString("email"));
+                    editor.putString("phone", result.getString("phone"));
+                    editor.putString("gender", result.getString("gender"));
+                    editor.apply();
+
+                    Snackbar.make(findViewById(android.R.id.content), "Successfully registered!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.putExtra("name", user.getName());
+                    intent.putExtra("email", user.getEmail());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                } else {
+                    Snackbar.make(registerBtnView, "Registration failed! Please try again", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }

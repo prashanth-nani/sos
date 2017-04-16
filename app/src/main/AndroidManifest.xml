@@ -77,7 +77,12 @@
         <service
             android:name=".appServices.PowerButtonReceiverRegisterService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".MyAccount"
+            android:label="@string/title_activity_my_account"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
