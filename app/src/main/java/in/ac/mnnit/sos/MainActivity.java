@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.ac.mnnit.sos.appServices.PowerButtonReceiverRegisterService;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.database.entity.EcontactAddress;
 import in.ac.mnnit.sos.database.entity.EcontactEmail;
@@ -56,6 +59,7 @@ import in.ac.mnnit.sos.services.ContactServiceHelper;
 import in.ac.mnnit.sos.services.GoogleApiClientImpl;
 import in.ac.mnnit.sos.services.LocationService;
 import in.ac.mnnit.sos.services.LogoutUser;
+import in.ac.mnnit.sos.services.PowerButtonReceiver;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -104,6 +108,8 @@ public class MainActivity extends AppCompatActivity
         MAIN_ACTIVITY_CONTEXT = getBaseContext();
         setContentView(R.layout.activity_main);
 
+        registerPowerButtonBroadcastReceiver();
+//        Toast.makeText(getBaseContext(), PowerButtonReceiver.powerButtonClickCounter+"", Toast.LENGTH_LONG).show();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -147,8 +153,16 @@ public class MainActivity extends AppCompatActivity
 
         LocationService locationService = new LocationService(this);
         locationService.trackUserLocation();
+    }
 
+    private  void registerPowerButtonBroadcastReceiver(){
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        BroadcastReceiver mReceiver = new PowerButtonReceiver();
+//        registerReceiver(mReceiver, filter);
 
+        Intent intent = new Intent(this, PowerButtonReceiverRegisterService.class);
+        startService(intent);
     }
 
     private void onClickSelectContact() {
@@ -482,6 +496,12 @@ public class MainActivity extends AppCompatActivity
         } else if (dialogID == NETWORK_DIALOG_ID || dialogID == INTERNET_DIALOG_ID){
             bottomNavigationMenuHome.performClick();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        Toast.makeText(getBaseContext(), PowerButtonReceiver.powerButtonClickCounter+"", Toast.LENGTH_LONG).show();
     }
 
     private class BottomNavigationHandler implements BottomNavigationView.OnNavigationItemSelectedListener {

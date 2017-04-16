@@ -13,6 +13,8 @@ public class AlarmService extends Service {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
+
+    public static boolean running = false;
     public AlarmService() {
 
     }
@@ -27,6 +29,7 @@ public class AlarmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Thread thread = new Thread(new AlarmThread(startId));
         thread.start();
+        running = true;
         editor.putBoolean("alarmOn", true);
         editor.apply();
         return START_STICKY;
@@ -36,6 +39,7 @@ public class AlarmService extends Service {
     public void onDestroy() {
         Toast.makeText(this, "Alarm Service stopped", Toast.LENGTH_SHORT).show();
         alarmHelper.stopAlarm();
+        running = false;
         editor.putBoolean("alarmOn", false);
         editor.apply();
         stopSelf();
@@ -47,7 +51,7 @@ public class AlarmService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    final class AlarmThread implements Runnable{
+    private final class AlarmThread implements Runnable{
 
         int serviceId;
         AlarmThread(int serviceId) {

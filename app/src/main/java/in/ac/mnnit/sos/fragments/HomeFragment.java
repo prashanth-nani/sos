@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Timer taskTimer;
 
     private OnFragmentInteractionListener mListener;
+    SharedPreferences sharedPreferences;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -67,8 +68,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
-        SharedPreferences sharedPreferences = context.getSharedPreferences("alarmService", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreferences = context.getSharedPreferences("alarmService", MODE_PRIVATE);
         serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
         alarmHelper = new AlarmHelper(getActivity());
         alarmIntent = new Intent(getActivity(), AlarmService.class);
@@ -93,6 +93,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 dangerButton.setText("STOP");
         }
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
+        if(serviceRunning)
+            dangerButton.setText("STOP");
     }
 
     public void initializeTimers(){

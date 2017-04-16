@@ -72,7 +72,12 @@
         <activity
             android:name=".SelfHelp"
             android:label="@string/title_activity_self_help"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".appServices.PowerButtonReceiverRegisterService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
