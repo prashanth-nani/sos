@@ -24,6 +24,7 @@ import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.appServices.RescueService;
 import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
+import in.ac.mnnit.sos.extras.Utils;
 import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
@@ -66,7 +67,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
         sharedPreferences = context.getSharedPreferences("alarmService", MODE_PRIVATE);
-        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
+//        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
+        setServiceStatus();
         alarmHelper = new AlarmHelper(getActivity());
         alarmIntent = new Intent(getActivity(), RescueService.class);
 //        flashService = new FlashHelper(getActivity());
@@ -97,7 +99,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
+//        serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
+        setServiceStatus();
         if (serviceRunning)
             dangerButton.setText("STOP");
     }
@@ -139,6 +142,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        }
 //    }
 
+    public void setServiceStatus(){
+        Utils utils = new Utils();
+        serviceRunning = utils.isServiceRunning(getActivity(), RescueService.class);
+    }
+
     public void onClickDanger() {
         if (!serviceRunning) {
             serviceRunning = true;
@@ -179,8 +187,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             messageContent = "Please help!! I'm in danger. I'm at " + locationMapLink;
         }
         messageService.sendSMS(phones, messageContent);
-        Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
+        //Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
+             //   .setAction("Action", null).show();
     }
 
     public void startAlarm() {
