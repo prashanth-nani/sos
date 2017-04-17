@@ -13,7 +13,7 @@ import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.services.NearbySearchHelper;
 
 /**
- * Created by prashanth on 5/4/17.
+ * Created by Banda Prashanth Yadav on 5/4/17.
  */
 
 public class NearbyPlacesDialogFrament extends BottomSheetDialogFragment implements View.OnClickListener{

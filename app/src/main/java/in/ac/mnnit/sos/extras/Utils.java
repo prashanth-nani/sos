@@ -24,7 +24,7 @@ import java.io.IOException;
 import in.ac.mnnit.sos.models.GeoPoint;
 
 /**
- * Created by prashanth on 23/2/17.
+ * Created by Banda Prashanth Yadav on 23/2/17.
  */
 
 public class Utils {

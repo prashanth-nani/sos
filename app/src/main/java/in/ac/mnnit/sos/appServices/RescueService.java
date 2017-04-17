@@ -16,7 +16,7 @@ import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.LocationDetailsHolder;
 import in.ac.mnnit.sos.services.MessageService;
 
-public class AlarmService extends Service {
+public class RescueService extends Service {
     AlarmHelper alarmHelper;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -25,7 +25,7 @@ public class AlarmService extends Service {
 
 
     public static boolean running = false;
-    public AlarmService() {
+    public RescueService() {
 
     }
 
@@ -77,7 +77,7 @@ public class AlarmService extends Service {
 
         @Override
         public void run() {
-            alarmHelper = new AlarmHelper(AlarmService.this);
+            alarmHelper = new AlarmHelper(RescueService.this);
             alarmHelper.startAlarm();
         }
     }
@@ -96,7 +96,7 @@ public class AlarmService extends Service {
 
         public void sendSMS(){
             MessageService messageService = new MessageService();
-            LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(AlarmService.this);
+            LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(RescueService.this);
             ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
             String locationBaseLink = "http://maps.google.com/maps?q=";
             String locationMapLink;

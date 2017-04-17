@@ -10,7 +10,7 @@ import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by prashanth on 1/3/17.
+ * Created by Banda Prashanth Yadav on 1/3/17.
  */
 
 public class LogoutUser {

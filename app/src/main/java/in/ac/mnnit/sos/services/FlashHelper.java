@@ -6,7 +6,7 @@ import android.hardware.Camera;
 import java.io.IOException;
 
 /**
- * Created by prashanth on 29/3/17.
+ * Created by Banda Prashanth Yadav on 29/3/17.
  */
 
 public class FlashHelper {

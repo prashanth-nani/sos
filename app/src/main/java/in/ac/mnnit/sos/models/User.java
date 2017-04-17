@@ -1,7 +1,7 @@
 package in.ac.mnnit.sos.models;
 
 /**
- * Created by prashanth on 21/2/17.
+ * Created by Banda Prashanth Yadav on 21/2/17.
  */
 
 public class User {

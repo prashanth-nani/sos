@@ -8,7 +8,7 @@ import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 
 /**
- * Created by prashanth on 21/2/17.
+ * Created by Banda Prashanth Yadav on 21/2/17.
  */
 
 public class Config {

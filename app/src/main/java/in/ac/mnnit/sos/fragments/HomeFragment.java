@@ -18,7 +18,7 @@ import java.util.Timer;
 
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
-import in.ac.mnnit.sos.appServices.AlarmService;
+import in.ac.mnnit.sos.appServices.RescueService;
 import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sharedPreferences = context.getSharedPreferences("alarmService", MODE_PRIVATE);
         serviceRunning = sharedPreferences.getBoolean("alarmOn", false);
         alarmHelper = new AlarmHelper(getActivity());
-        alarmIntent = new Intent(getActivity(), AlarmService.class);
+        alarmIntent = new Intent(getActivity(), RescueService.class);
 //        flashService = new FlashHelper(getActivity());
 
     }

@@ -20,7 +20,7 @@ import in.ac.mnnit.sos.models.Place;
 import in.ac.mnnit.sos.services.HttpRequestsHelper.OnServerResponseListener;
 
 /**
- * Created by prashanth on 3/4/17.
+ * Created by Banda Prashanth Yadav on 3/4/17.
  */
 
 public class NearbySearchHelper {

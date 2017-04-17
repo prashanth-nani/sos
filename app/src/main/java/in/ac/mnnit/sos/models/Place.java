@@ -1,7 +1,7 @@
 package in.ac.mnnit.sos.models;
 
 /**
- * Created by prashanth on 4/4/17.
+ * Created by Banda Prashanth Yadav on 4/4/17.
  */
 
 public class Place {

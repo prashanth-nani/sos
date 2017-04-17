@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import in.ac.mnnit.sos.appServices.AlarmService;
+import in.ac.mnnit.sos.appServices.RescueService;
 
 /**
- * Created by prashanth on 16/4/17.
+ * Created by Banda Prashanth Yadav on 16/4/17.
  */
 
 public class PowerButtonReceiver extends BroadcastReceiver {
@@ -18,7 +18,7 @@ public class PowerButtonReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent alarmIntent = new Intent(context, AlarmService.class);
+        Intent alarmIntent = new Intent(context, RescueService.class);
         if(!running) {
             if (powerButtonClickCounter >= 5) {
                 powerButtonClickCounter = 0;

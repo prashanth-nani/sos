@@ -1,7 +1,7 @@
 package in.ac.mnnit.sos.extras;
 
 /**
- * Created by prashanth on 25/2/17.
+ * Created by Banda Prashanth Yadav on 25/2/17.
  */
 import android.content.Context;
 import android.graphics.Bitmap;

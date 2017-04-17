@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import in.ac.mnnit.sos.MainActivity;
 
 /**
- * Created by prashanth on 28/3/17.
+ * Created by Banda Prashanth Yadav on 28/3/17.
  */
 
 public class GoogleApiClientImpl implements GoogleApiClient.ConnectionCallbacks,

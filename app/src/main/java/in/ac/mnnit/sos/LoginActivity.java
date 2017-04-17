@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -64,6 +65,7 @@ public class LoginActivity extends AppCompatActivity
             progressBarHolder.setVisibility(View.GONE);
             JSONObject result = null;
             String status = "ERROR";
+            Log.d("TAF", (String)response);
             try {
                 result = new JSONObject((String) response);
                 status = result.getString("status");

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -86,6 +87,8 @@ public class RegisterActivity extends AppCompatActivity
             JSONObject result = null;
             String status = "ERROR";
 
+            Log.d("TAF", (String)response);
+
             try {
                 result = new JSONObject((String) response);
                 status = result.getString("status");
@@ -111,8 +114,9 @@ public class RegisterActivity extends AppCompatActivity
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 } else {
-                    Snackbar.make(registerBtnView, "Registration failed! Please try again", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+//                    Snackbar.make(registerBtnView, "Registration failed! Please try again", Snackbar.LENGTH_LONG)
+//                            .setAction("Action", null).show();
+                    Toast.makeText(getBaseContext(), (String)response, Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

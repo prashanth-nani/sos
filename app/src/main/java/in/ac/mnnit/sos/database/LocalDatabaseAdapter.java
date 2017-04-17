@@ -22,7 +22,7 @@ import in.ac.mnnit.sos.models.Email;
 import in.ac.mnnit.sos.models.Phone;
 
 /**
- * Created by prashanth on 1/3/17.
+ * Created by Banda Prashanth Yadav on 1/3/17.
  */
 
 public class LocalDatabaseAdapter {

@@ -8,7 +8,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by prashanth on 23/3/17.
+ * Created by Banda Prashanth Yadav on 23/3/17.
  */
 
 public class MyLocationListener implements LocationListener {

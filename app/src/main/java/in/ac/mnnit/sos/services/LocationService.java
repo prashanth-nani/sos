@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,7 +22,7 @@ import java.util.Locale;
 import in.ac.mnnit.sos.MainActivity;
 
 /**
- * Created by prashanth on 6/3/17.
+ * Created by Banda Prashanth Yadav on 6/3/17.
  */
 
 public class LocationService {
@@ -66,7 +67,7 @@ public class LocationService {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            ((MainActivity) context).showGPSOffSnackbar();
+            Toast.makeText(context, "Location permission is not granted", Toast.LENGTH_SHORT).show();
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);

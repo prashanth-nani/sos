@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity
         MAIN_ACTIVITY_CONTEXT = getBaseContext();
         setContentView(R.layout.activity_main);
 
+        checkPermissions();
+
         registerPowerButtonBroadcastReceiver();
 //        Toast.makeText(getBaseContext(), PowerButtonReceiver.powerButtonClickCounter+"", Toast.LENGTH_LONG).show();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -164,6 +166,26 @@ public class MainActivity extends AppCompatActivity
 
         username.setText(name);
         userEmail.setText(email);
+    }
+
+    private void checkPermissions(){
+        int contactPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        int cameraPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int locationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int microphonePermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        int callingPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.SEND_SMS,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                50);
+
     }
 
     private  void registerPowerButtonBroadcastReceiver(){

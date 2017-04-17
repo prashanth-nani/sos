@@ -19,7 +19,7 @@ import in.ac.mnnit.sos.models.User;
 import in.ac.mnnit.sos.services.Config;
 
 /**
- * Created by prashanth on 2/3/17.
+ * Created by Banda Prashanth Yadav on 2/3/17.
  */
 
 public class HttpRequestsHelper {

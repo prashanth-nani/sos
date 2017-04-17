@@ -6,7 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 /**
- * Created by prashanth on 28/3/17.
+ * Created by Banda Prashanth Yadav on 28/3/17.
  */
 
 public class AlarmHelper {

@@ -13,7 +13,7 @@ import in.ac.mnnit.sos.PlacesActivity;
 import in.ac.mnnit.sos.R;
 
 /**
- * Created by prashanth on 12/4/17.
+ * Created by Banda Prashanth Yadav on 12/4/17.
  */
 
 public class PlaceDetailsBottomSheetFragment extends BottomSheetDialogFragment {

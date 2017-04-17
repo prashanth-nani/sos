@@ -9,7 +9,7 @@ import java.util.List;
 import in.ac.mnnit.sos.MainActivity;
 
 /**
- * Created by prashanth on 24/3/17.
+ * Created by Banda Prashanth Yadav on 24/3/17.
  */
 
 public class LocationDetailsHolder {
