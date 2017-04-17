@@ -41,7 +41,7 @@ public class RescueService extends Service {
         Thread thread = new Thread(new AlarmThread(startId));
         thread.start();
         smsthread = new Thread(new SMSThread(startId));
-//        smsthread.start();
+        smsthread.start();
 
         running = true;
         editor.putBoolean("alarmOn", true);

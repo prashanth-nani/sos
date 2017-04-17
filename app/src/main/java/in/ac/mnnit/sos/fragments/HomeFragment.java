@@ -8,19 +8,26 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 import java.util.Timer;
 
 import in.ac.mnnit.sos.MainActivity;
 import in.ac.mnnit.sos.R;
 import in.ac.mnnit.sos.appServices.RescueService;
+import in.ac.mnnit.sos.database.LocalDatabaseAdapter;
 import in.ac.mnnit.sos.services.AlarmHelper;
 import in.ac.mnnit.sos.services.FlashLightHelper;
+import in.ac.mnnit.sos.services.LocationDetailsHolder;
+import in.ac.mnnit.sos.services.MessageService;
 import in.ac.mnnit.sos.services.VoiceRecordHelper;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -136,7 +143,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (!serviceRunning) {
             serviceRunning = true;
             dangerButton.setText("Stop");
-//            sendSMS();
+            sendSMS();
             context.startService(alarmIntent);
         } else {
             context.stopService(alarmIntent);
@@ -158,23 +165,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        sendSMS();
     }
 
-//    public void sendSMS() {
-//        MessageService messageService = new MessageService();
-//        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
-//        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
-//        String locationBaseLink = "http://maps.google.com/maps?q=";
-//        String locationMapLink;
-//        String messageContent = "Please help!! I'm in danger.";
-//        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
-//        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
-//        if (bestKnownLoc != null) {
-//            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude) + "," + String.valueOf(bestKnownLoc.longitude));
-//            messageContent = "Please help!! I'm in danger. I'm at " + locationMapLink;
-//        }
-//        messageService.sendSMS(phones, messageContent);
-//        Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
-//                .setAction("Action", null).show();
-//    }
+    public void sendSMS() {
+        MessageService messageService = new MessageService();
+        LocalDatabaseAdapter localDatabaseAdapter = new LocalDatabaseAdapter(getActivity());
+        ArrayList<String> phones = localDatabaseAdapter.getAllPhones();
+        String locationBaseLink = "http://maps.google.com/maps?q=";
+        String locationMapLink;
+        String messageContent = "Please help!! I'm in danger.";
+        LocationDetailsHolder locationDetailsHolder = new LocationDetailsHolder();
+        LatLng bestKnownLoc = locationDetailsHolder.getLastBestLocation();
+        if (bestKnownLoc != null) {
+            locationMapLink = locationBaseLink.concat(String.valueOf(bestKnownLoc.latitude) + "," + String.valueOf(bestKnownLoc.longitude));
+            messageContent = "Please help!! I'm in danger. I'm at " + locationMapLink;
+        }
+        messageService.sendSMS(phones, messageContent);
+        Snackbar.make(getActivity().findViewById(android.R.id.content), "SMS Sent", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
 
     public void startAlarm() {
         alarmHelper.startAlarm();
